@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projekt — Simon Strandanger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <a class="site-brand" href="index.html">Simon Strandanger</a>
+
+  <nav class="site-nav">
+    <a class="site-nav-link" href="index.html">Hem</a>
+    <a class="site-nav-link" href="photograph.html">Foton</a>
+    <a class="site-nav-link is-active" href="projects.html">Projekt</a>
+  </nav>
+
+  <main class="projects-showcase" aria-label="Alla projekt">
+    <a class="projects-showcase-item" href="projects/project-1.html"><img src="images/projects/project-1/hero.jpg" alt="Projekt 01" onerror="this.parentElement.classList.add('missing')"></a>
+    <a class="projects-showcase-item" href="projects/project-2.html"><img src="images/projects/project-2/hero.jpg" alt="Projekt 02" onerror="this.parentElement.classList.add('missing')"></a>
+    <a class="projects-showcase-item" href="projects/project-3.html"><img src="images/projects/project-3/hero.jpg" alt="Projekt 03" onerror="this.parentElement.classList.add('missing')"></a>
+    <a class="projects-showcase-item" href="projects/project-4.html"><img src="images/projects/project-4/hero.jpg" alt="Projekt 04" onerror="this.parentElement.classList.add('missing')"></a>
+    <a class="projects-showcase-item" href="projects/project-5.html"><img src="images/projects/project-5/hero.jpg" alt="Projekt 05" onerror="this.parentElement.classList.add('missing')"></a>
+    <a class="projects-showcase-item" href="projects/project-6.html"><img src="images/projects/project-6/hero.jpg" alt="Projekt 06" onerror="this.parentElement.classList.add('missing')"></a>
+    <a class="projects-showcase-item" href="projects/project-7.html"><img src="images/projects/project-7/hero.jpg" alt="Projekt 07" onerror="this.parentElement.classList.add('missing')"></a>
+    <a class="projects-showcase-item" href="projects/project-8.html"><img src="images/projects/project-8/hero.jpg" alt="Projekt 08" onerror="this.parentElement.classList.add('missing')"></a>
+    <a class="projects-showcase-item" href="projects/project-9.html"><img src="images/projects/project-9/hero.jpg" alt="Projekt 09" onerror="this.parentElement.classList.add('missing')"></a>
+  </main>
+
+  <div class="projects-showcase-progress" id="projects-showcase-progress"></div>
+
+  <a class="hero-contact" id="hero-contact" href="mailto:siblon06@gmail.com" aria-label="Kopiera min mejladress">
+    <span class="hero-contact-label" aria-live="polite">Email copied</span>
+    <span class="hero-contact-icon-wrap">
+      <svg class="hero-contact-icon hero-contact-icon-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+        <path d="m22 6-10 7L2 6"></path>
+      </svg>
+      <svg class="hero-contact-icon hero-contact-icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 6 9 17l-5-5"></path>
+      </svg>
+    </span>
+  </a>
+
+  <script src="js/shared.js"></script>
+  <script src="js/project.js"></script>
+</body>
+</html>
