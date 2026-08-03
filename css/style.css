@@ -1,0 +1,1991 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #ffffff;
+  --fg: #111111;
+  --fg-rgb: 17, 17, 17; /* --fg's channels, for the many rgba(var(--fg-rgb), alpha) tints below */
+  --media-placeholder: linear-gradient(135deg, #dcdcdc, #f0f0f0); /* empty-media background, shared by every image/video placeholder box */
+  --intro-fg: #f5f5f0;
+  --curtain-bg: #f4f1ea;
+  --font: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif;
+
+  /* About/CV accent — matches the site-nav's existing #d9793f. */
+  --about-terracotta: #d9793f;
+  --about-violet: #8f6fd9;
+}
+
+html, body {
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font);
+  overflow-x: clip; /* blocks horizontal overflow without the overflow-x:hidden side effect of forcing overflow-y:auto, which breaks position:sticky in descendants */
+  /* Stops an overscroll at the very top/bottom from chaining into the browser's own
+     back/forward swipe or pull-to-refresh — without this, a fast return-to-carousel
+     flick right at scrollY 0 could trigger real browser navigation mid-gesture. */
+  overscroll-behavior-y: contain;
+}
+
+/* ---------- Intro ---------- */
+
+#intro {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.curtain {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  background: #000;
+  z-index: 1;
+  transition: transform 800ms cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.curtain-left { left: 0; }
+.curtain-right { right: 0; }
+
+#intro.hide {
+  pointer-events: none;
+}
+
+#intro.hide .curtain-left { transform: translateX(-100%); }
+#intro.hide .curtain-right { transform: translateX(100%); }
+
+.intro-word {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  font-size: clamp(2rem, 7vw, 4rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--intro-fg);
+  transition: opacity 200ms ease;
+}
+
+#intro.hide .intro-word {
+  opacity: 0;
+}
+
+.hej-letter {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.6em);
+  animation: stairIn 420ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes stairIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- Main content ---------- */
+
+#main-content {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+
+#main-content.visible {
+  opacity: 1;
+}
+
+/* A transparent interaction shield stays up until the opening project carousel
+   animation has finished. The intro curtain sits above this shield. */
+body.projects-locked::before {
+  content: '';
+  position: fixed;
+  z-index: 800;
+  inset: 0;
+  cursor: wait;
+}
+
+/* ---------- Site brand: fixed top-left, mirrors .site-nav's placement/scope ---------- */
+
+.site-brand {
+  position: fixed;
+  top: 1.5rem;
+  left: 1.5rem;
+  z-index: 600;
+  color: var(--fg);
+  text-decoration: none;
+  font-family: 'Bricolage Grotesque', var(--font);
+  font-weight: 800;
+  font-size: 1.75rem;
+  letter-spacing: 0.01em;
+  /* Starts hidden — script.js reveals it once, right as the carousel's own reveal
+     begins (see revealSiteBrand), rather than it just sitting on screen through the
+     whole "Hej" intro. This same opacity transition also drives the ongoing
+     curtain-hide toggle later, hence the plain fast 200ms default. */
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+
+/* Swapped in for exactly the one-time entrance (see script.js) so that transition
+   plays over the same span as the carousel's own two-stage reveal (750ms + 750ms),
+   landing together as one beat — removed again straight after, so hover and the
+   curtain-hide toggle go back to the quick 200ms above. */
+.site-brand.brand-intro {
+  transition: opacity 1500ms cubic-bezier(0.16, 0.84, 0.44, 1), transform 1500ms cubic-bezier(0.16, 0.84, 0.44, 1);
+}
+
+.site-brand.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.site-brand:hover {
+  opacity: 0.6;
+}
+
+/* ---------- Site nav: fixed top-right, on the home/photo/all-projects screens only ---------- */
+
+.site-nav {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 600;
+  display: flex;
+  gap: 1.75rem;
+  /* matches .site-brand's fade so both hide in lockstep instead of .site-nav
+     snapping instantly while .site-brand is still mid-fade */
+  transition: opacity 200ms ease;
+}
+
+/* Toggled by script.js the instant the About curtain starts rising (curtainProgress
+   > 0) and lifted again on handoff — it reads as part of the base carousel screen,
+   covered by the curtain like everything else beneath it. This can't just rely on
+   the curtain's own z-index/DOM order: that only visually overlaps this 24px-from-
+   top header for the last couple percent of the rise (the curtain has to physically
+   reach that close to the top edge first), so an explicit class covers the whole
+   rise instead of just its very end. */
+body.curtain-covers-header .site-brand,
+body.curtain-covers-header .site-nav {
+  opacity: 0;
+  pointer-events: none;
+  /* Disappearing is instant, no fade — matches how the carousel itself is simply
+     covered by the curtain's movement rather than fading out. Only wins for this
+     specific change (entering the hidden state): once the class is removed, the
+     base .site-brand/.site-nav transition above takes back over, so reappearing
+     still eases in rather than popping. */
+  transition-duration: 0s;
+}
+
+.site-nav-link {
+  position: relative;
+  color: var(--fg);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid transparent;
+  transition: border-color 200ms ease;
+}
+
+.site-nav-link::before,
+.site-nav-link::after {
+  content: '*';
+  position: absolute;
+  top: 0;
+  color: #d9793f;
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+
+.site-nav-link::before { left: -0.95rem; }
+.site-nav-link::after { right: -0.95rem; }
+
+.site-nav-link.is-active,
+.site-nav-link:hover {
+  border-color: var(--fg);
+}
+
+.site-nav-link.is-active::before,
+.site-nav-link.is-active::after,
+.site-nav-link:hover::before,
+.site-nav-link:hover::after {
+  opacity: 1;
+}
+
+/* ---------- Contact button: fixed pill, click to copy email ---------- */
+
+.hero-contact {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  z-index: 500; /* stays above every section's content, not just the hero photo's stack */
+  height: 64px;
+  border-radius: 999px;
+  background: var(--fg);
+  color: var(--bg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0; /* only appears once expanded — kept at 0 here so padding + icon alone add up to a perfect circle */
+  padding: 0 21px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 250ms ease, height 450ms cubic-bezier(0.65, 0, 0.35, 1), gap 450ms cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.hero-contact:hover {
+  transform: scale(1.08);
+}
+
+.hero-contact.copied {
+  height: 68px;
+  gap: 0.5rem;
+}
+
+.hero-contact.copied:hover {
+  transform: none; /* the pill's own height/width change is enough feedback — stacking the hover scale on top read as janky */
+}
+
+.hero-contact.pop {
+  animation: contactPop 320ms ease-out;
+}
+
+@keyframes contactPop {
+  0% { transform: scale(1); }
+  40% { transform: scale(0.97); }
+  70% { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+
+.hero-contact-label {
+  display: inline-block;
+  max-width: 0;
+  overflow: hidden;
+  opacity: 0;
+  white-space: nowrap;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: max-width 450ms cubic-bezier(0.65, 0, 0.35, 1), opacity 250ms ease 150ms, font-size 450ms cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.hero-contact.copied .hero-contact-label {
+  max-width: 240px;
+  opacity: 1;
+  font-size: 0.9rem;
+}
+
+.hero-contact-icon-wrap {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  transition: width 450ms cubic-bezier(0.65, 0, 0.35, 1), height 450ms cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.hero-contact.copied .hero-contact-icon-wrap {
+  width: 24px;
+  height: 24px;
+}
+
+.hero-contact-icon {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+  transition: opacity 200ms ease, transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hero-contact-icon-check {
+  opacity: 0;
+  transform: scale(0.5) rotate(-20deg);
+}
+
+.hero-contact.copied .hero-contact-icon-mail {
+  opacity: 0;
+  transform: scale(0.5) rotate(20deg);
+}
+
+.hero-contact.copied .hero-contact-icon-check {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+
+/* ---------- Photography gallery: fixed centre image, scroll-driven thumbnail wave ---------- */
+
+.photo-gallery-page {
+  background: #f7f6f3;
+}
+
+.photo-gallery-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1.25rem;
+  pointer-events: none;
+}
+
+.photo-gallery-header p {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.photo-gallery-back-icon {
+  position: fixed;
+  z-index: 21;
+  top: 1.5rem;
+  left: 1.5rem;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--fg);
+  color: var(--bg);
+  transition: transform 200ms ease;
+}
+
+.photo-gallery-back-icon:hover {
+  transform: scale(1.08);
+}
+
+.photo-gallery-back-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.photo-gallery {
+  position: relative;
+}
+
+.photo-gallery-stage {
+  position: fixed;
+  z-index: 1;
+  top: 50%;
+  left: clamp(7rem, 18vw, 18rem);
+  right: clamp(2rem, 10vw, 12rem);
+  height: min(78vh, 820px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.photo-gallery-stage img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  will-change: transform, opacity;
+}
+
+.photo-gallery-count {
+  position: absolute;
+  bottom: -1.9rem;
+  right: 0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.photo-gallery-rail {
+  position: fixed;
+  z-index: 5;
+  top: 50%;
+  left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.6rem, 1.2vh, 1rem);
+  transform: translateY(calc(-50% + var(--rail-shift, 0px)));
+  will-change: transform;
+}
+
+.photo-gallery-thumb {
+  display: block;
+  width: clamp(42px, 4.4vw, 76px);
+  aspect-ratio: 1 / 1.25;
+  overflow: hidden;
+  opacity: 0.48;
+  transform: translateX(var(--wave-offset, 0)) scale(var(--wave-scale, 0.7));
+  transform-origin: left center;
+  transition: opacity 180ms ease;
+  will-change: transform;
+}
+
+.photo-gallery-thumb img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.photo-gallery-thumb.is-active {
+  opacity: 1;
+}
+
+.photo-gallery-scroll {
+  position: relative;
+  z-index: 0;
+}
+
+.photo-gallery-stop {
+  height: 100vh;
+  min-height: 580px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 2rem;
+  color: transparent;
+}
+
+.photo-gallery-stop span { font-size: 0.7rem; }
+
+.photo-gallery-back {
+  position: fixed;
+  z-index: 10;
+  bottom: 1.5rem;
+  left: 50%;
+  color: var(--fg);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transform: translateX(-50%);
+}
+
+/* ---------- Projects: curtain-reveal anchor, unfolds into a drag/scroll horizontal gallery ---------- */
+
+.projects {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 4rem 0;
+  overflow: hidden;
+}
+
+.projects-track {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0 3rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  cursor: grab;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  /* The loop-buffer keeps a real edge from ever being visible, but without this a
+     hard fling could still momentarily chain into a horizontal browser-navigation
+     swipe gesture instead of staying inside the track. */
+  overscroll-behavior-x: contain;
+}
+
+.projects-track::-webkit-scrollbar {
+  display: none;
+}
+
+.projects-track.dragging {
+  cursor: grabbing;
+  scroll-snap-type: none;
+}
+
+.project-item {
+  position: relative;
+  overflow: hidden; /* clips the clip/placeholder box while it's parked above, before it slides down */
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  flex: 0 0 auto;
+  width: 22vw;
+  min-width: 220px;
+  height: 68vh;
+  backface-visibility: hidden;
+}
+
+/* non-anchor items start stacked exactly on top of the anchor (via a JS-measured translateX,
+   set inline) and fly out sideways to their natural spot when JS sets translateX(0) on reveal —
+   width never changes here, so nothing stretches */
+.project-item:not(.anchor) {
+  opacity: 0;
+  transition: transform 750ms cubic-bezier(0.65, 0, 0.35, 1), opacity 500ms ease;
+}
+
+.project-item.flown-in {
+  opacity: 1;
+}
+
+.project-item-clip {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--media-placeholder);
+}
+
+.project-item-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 600ms cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.project-item:hover .project-item-img {
+  transform: scale(1.05);
+}
+
+.project-item.missing .project-item-img {
+  display: none;
+}
+
+/* the whole clip box (real image or placeholder alike) slides down into place — this way
+   the reveal is visible even before real project photos are dropped into images/project-N.jpg */
+.project-item.anchor .project-item-clip,
+.project-item.anchor.missing::after {
+  transform: translateY(-100%);
+  transition: transform 800ms cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.project-item.anchor.revealed .project-item-clip,
+.project-item.anchor.missing.revealed::after {
+  transform: translateY(0);
+}
+
+.project-item.missing::after {
+  content: attr(data-index);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: rgba(var(--fg-rgb), 0.25);
+}
+
+.projects-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 3rem;
+}
+
+.projects-hint {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(var(--fg-rgb), 0.4);
+}
+
+.projects-progress {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.progress-dot {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 20px;
+  border: none;
+  margin: 0;
+  padding: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.progress-dot::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 28px;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(var(--fg-rgb), 0.15);
+  transform: translate(-50%, -50%);
+  transition: background 250ms ease, width 250ms ease, height 250ms ease, border-radius 250ms ease;
+}
+
+.progress-dot.active::before {
+  background: var(--fg);
+}
+
+.progress-dot-number {
+  position: relative;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--bg);
+  opacity: 0;
+  transform: scale(0.5);
+  transition: opacity 200ms ease, transform 200ms ease;
+  pointer-events: none;
+}
+
+.progress-dot:hover::before,
+.progress-dot:focus-visible::before {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--fg);
+}
+
+.progress-dot:hover .progress-dot-number,
+.progress-dot:focus-visible .progress-dot-number {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ---------- About: doubles as the curtain — see .curtain-mode below ---------- */
+
+.about {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 6rem 3rem;
+  /* set here, not just on .curtain-mode below, so the color stays identical the
+     instant it hands off from fixed "curtain" to normal page flow */
+  background: var(--curtain-bg);
+}
+
+/* Set in the HTML by default (the very first thing the carousel hands off to) and
+   toggled by script.js: fixed full-screen so this section's own content is what's
+   printed on the "curtain" as it rides up — script.js drives its transform 1:1 with
+   the wheel. Removed once handed off to real page flow, so this stays a plain
+   opacity/transform toggle rather than an animated property, cheap to update every tick. */
+.about.curtain-mode {
+  position: fixed;
+  inset: 0;
+  z-index: 600;
+  transform: translateY(100%);
+  pointer-events: none;
+  /* the reveal content is taller than one viewport — top-align instead of the base
+     rule's center, so the curtain face is always what's visible first */
+  align-items: flex-start;
+  /* Its transform gets rewritten every rAF tick for the whole rise — this hint gets
+     it onto its own compositor layer for that up front instead of only after the
+     first frame, which is what made the rise's very first tick or two feel like a
+     stutter before it settled into a smooth glide. Only costs anything while this
+     class is actually applied; gone again the instant handoff removes it. */
+  will-change: transform;
+}
+
+/* Belt-and-suspenders: .about-reveal sits structurally below the first viewport
+   while curtain-mode holds this section fixed to exactly one viewport tall, so it's
+   already unreachable — this just guarantees a stray pointer event during the rise
+   can never trigger the tilt/cross-highlight/parallax handlers below either. */
+.about.curtain-mode .about-reveal {
+  pointer-events: none;
+}
+
+.about-inner {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* ---------- Curtain face: eyebrow + heading + decorative watermark/scroll-cue —
+   the only content rendered while curtain-mode is active, so it needs to read as
+   complete on its own for however long the rise takes. ---------- */
+
+.about-curtainface {
+  position: relative;
+}
+
+.about-eyebrow {
+  display: flex;
+  align-items: center;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.8rem;
+  color: rgba(var(--fg-rgb), 0.6);
+  margin-bottom: 1.5rem;
+}
+
+.eyebrow-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--about-terracotta);
+  margin-right: 0.6rem;
+  animation: dot-pulse 2.6s ease-in-out infinite;
+}
+
+@keyframes dot-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.35); opacity: 1; }
+}
+
+.about-heading {
+  position: relative;
+  font-family: 'Bricolage Grotesque', var(--font);
+  font-weight: 800;
+  font-size: clamp(1.75rem, 4vw, 3.25rem);
+  line-height: 1.2;
+  max-width: 900px;
+  margin-bottom: 2rem;
+  /* Driven straight off the curtain's own scroll-scrub progress (--about-progress,
+     written by script.js on the same tick that moves the curtain itself) — the
+     heading settles into place as the curtain rises with no separate scroll listener. */
+  opacity: var(--about-progress, 1);
+  transform: translateY(calc((1 - var(--about-progress, 1)) * 16px));
+  will-change: opacity, transform;
+  backface-visibility: hidden;
+}
+
+.about-scrollcue {
+  display: block;
+  margin-top: 2rem;
+}
+
+.about-scrollcue::before {
+  content: '';
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid var(--fg);
+  border-bottom: 2px solid var(--fg);
+  transform: rotate(45deg);
+  opacity: 0.5;
+  animation: chevron-bounce 1.8s ease-in-out infinite;
+}
+
+@keyframes chevron-bounce {
+  0%, 100% { transform: rotate(45deg) translateY(0); opacity: 0.5; }
+  50% { transform: rotate(45deg) translateY(6px); opacity: 1; }
+}
+
+/* ---------- Reveal: hero image, split bio, timeline, CV button — everything below
+   the curtain's first viewport, reachable only once curtain-mode hands off to normal
+   scroll. Plain and static for now — no scroll/hover animation on any of it yet. ---------- */
+
+/* Generic placeholder box: real images just get dropped in at the src path already
+   in the HTML (images/about/*.jpg) and replace the gradient automatically — same
+   missing-image convention used for the project galleries elsewhere on the site. */
+.about-media {
+  background: var(--media-placeholder);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.about-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.about-media.missing img {
+  display: none;
+}
+
+.about-media--hero {
+  width: 100%;
+  height: clamp(320px, 46vw, 620px);
+  margin: 3rem 0 5rem;
+}
+
+/* ---------- About: reveal-on-scroll for everything below the curtain fold ----------
+   One-shot fade + rise, same restrained pattern used elsewhere on the site — the
+   IntersectionObserver in script.js flips .in-view once per element and stops
+   watching it, no continuous scroll-scrub needed for content that only ever
+   needs to arrive once. */
+.about-reveal-item {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 800ms cubic-bezier(0.16, 0.84, 0.44, 1), transform 800ms cubic-bezier(0.16, 0.84, 0.44, 1);
+}
+
+.about-reveal-item.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.about-reveal-item.about-reveal-delay-1.in-view {
+  transition-delay: 120ms;
+}
+
+.about-split {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 3rem;
+  align-items: start;
+  margin-bottom: 5rem;
+}
+
+.about-split-media {
+  position: sticky;
+  top: 2rem;
+}
+
+.about-split-label {
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: rgba(var(--fg-rgb), 0.45);
+  margin-bottom: 1rem;
+}
+
+.about-media--small {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+}
+
+.about-split-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding-top: 0.3rem;
+}
+
+.about-split-text p {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: rgba(var(--fg-rgb), 0.75);
+}
+
+.about-split-text strong {
+  color: var(--fg);
+  font-weight: 700;
+}
+
+.about-timeline-section {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 3rem;
+  align-items: start;
+  margin-bottom: 4rem;
+}
+
+.about-timeline-heading {
+  font-family: 'Bricolage Grotesque', var(--font);
+  font-weight: 800;
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  margin-bottom: 2rem;
+}
+
+.about-media--timeline {
+  position: sticky;
+  top: 2rem;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+}
+
+/* Timeline: a thin line down the left, one dot per stop. The line draws in
+   top-to-bottom and the stops cascade in one after another once scrolled into
+   view — small touch, but it's what makes it read as a timeline rather than a
+   static list. */
+.about-timeline {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  border-top: 1px solid rgba(var(--fg-rgb), 0.12);
+  padding-top: 2.5rem;
+}
+
+.about-timeline::before {
+  content: '';
+  position: absolute;
+  top: 2.5rem;
+  left: 4px;
+  width: 2px;
+  height: calc(100% - 2.5rem);
+  background: rgba(var(--fg-rgb), 0.15);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 900ms cubic-bezier(0.16, 0.84, 0.44, 1);
+}
+
+.about-timeline.in-view::before {
+  transform: scaleY(1);
+}
+
+.about-timeline-item {
+  position: relative;
+  padding-left: 2rem;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 700ms cubic-bezier(0.16, 0.84, 0.44, 1), transform 700ms cubic-bezier(0.16, 0.84, 0.44, 1);
+}
+
+.about-timeline-item.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.about-timeline-item:nth-child(1).in-view { transition-delay: 0ms; }
+.about-timeline-item:nth-child(2).in-view { transition-delay: 80ms; }
+.about-timeline-item:nth-child(3).in-view { transition-delay: 160ms; }
+.about-timeline-item:nth-child(4).in-view { transition-delay: 240ms; }
+.about-timeline-item:nth-child(5).in-view { transition-delay: 320ms; }
+.about-timeline-item:nth-child(6).in-view { transition-delay: 400ms; }
+
+.about-timeline-item::before {
+  content: '';
+  position: absolute;
+  top: 0.35rem;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--fg);
+  border: 2px solid var(--fg);
+}
+
+.about-timeline-period {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(var(--fg-rgb), 0.45);
+  margin-bottom: 0.4rem;
+}
+
+.about-timeline-role {
+  font-family: 'Bricolage Grotesque', var(--font);
+  font-weight: 800;
+  font-size: 1.15rem;
+  margin-bottom: 0.3rem;
+}
+
+.about-timeline-org {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(var(--fg-rgb), 0.55);
+  margin-bottom: 0.5rem;
+}
+
+.about-timeline-text {
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: rgba(var(--fg-rgb), 0.7);
+  max-width: 480px;
+}
+
+.about-cta {
+  margin-bottom: 3rem;
+}
+
+.btn-cv {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  width: fit-content;
+  padding: 0.85rem 1.4rem;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #fff;
+  background-image: linear-gradient(90deg, var(--about-terracotta), var(--about-violet), var(--about-terracotta));
+  background-size: 220% 100%;
+  background-position: 0% 0%;
+  transition: background-position 600ms ease, transform 300ms ease;
+}
+
+.btn-cv:hover, .btn-cv:focus-visible {
+  background-position: 100% 0%;
+  transform: translateY(-3px);
+}
+
+.btn-cv:active {
+  transform: scale(0.97);
+}
+
+.btn-cv:focus-visible {
+  outline: 2px solid var(--about-terracotta);
+  outline-offset: 3px;
+}
+
+.btn-cv svg {
+  width: 18px;
+  height: 18px;
+  transition: transform 300ms ease;
+}
+
+.btn-cv:hover svg, .btn-cv:focus-visible svg {
+  transform: translateY(2px);
+}
+
+.btn-cv::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transform: skewX(-20deg);
+  transition: transform 700ms ease;
+}
+
+.btn-cv:hover::after {
+  transform: translateX(250%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eyebrow-dot, .about-scrollcue::before {
+    animation: none;
+  }
+
+  .about-heading {
+    transform: none;
+  }
+}
+
+/* Toggled once at script init (see script.js) when prefers-reduced-motion matches. */
+html.reduce-motion .btn-cv,
+html.reduce-motion .btn-cv::after,
+html.reduce-motion .about-reveal-item,
+html.reduce-motion .about-timeline-item,
+html.reduce-motion .about-timeline::before {
+  transition-duration: 1ms !important;
+}
+
+/* ---------- Photograph: settles on the pinned title first, then more scrolling flies the cards in ---------- */
+
+.photo-showcase {
+  min-height: 320vh;
+  background: #e8e8e8;
+}
+
+.photo-showcase-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  min-height: 620px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.photo-showcase-kicker {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  z-index: 2;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* wraps the grid + "see all" button as one flow child of the stage, so place-items:center
+   on the stage still centers this whole group rather than each piece separately */
+.photo-showcase-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.5rem;
+}
+
+.photo-showcase-grid {
+  width: min(61vw, 1250px);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(0.6rem, 1.1vw, 1.1rem);
+  perspective: 1400px; /* shared once here instead of every card carrying its own */
+}
+
+.photo-showcase-card {
+  display: block;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: #d4d4d4;
+  opacity: 0;
+  will-change: opacity, transform;
+  backface-visibility: hidden;
+  cursor: default;
+}
+
+.photo-showcase-card img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  backface-visibility: hidden;
+  transition: transform 500ms ease;
+}
+
+.photo-showcase-card:hover img { transform: scale(1.06); }
+
+.photo-showcase-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.9rem 1.6rem;
+  border: 1px solid var(--fg);
+  border-radius: 999px;
+  color: var(--fg);
+  background: transparent;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  transition: background 200ms ease, color 200ms ease, transform 200ms ease;
+}
+
+.photo-showcase-cta:hover {
+  color: var(--bg);
+  background: var(--fg);
+  transform: translateY(-3px);
+}
+
+.photo-showcase-cta svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.photo-showcase-title,
+.photo-showcase-subtitle {
+  position: absolute;
+  z-index: 1;
+  color: #151515;
+  pointer-events: none;
+}
+
+.photo-showcase-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(4.5rem, 11vw, 12rem);
+  font-weight: 400;
+  letter-spacing: -0.09em;
+  line-height: .8;
+}
+
+.photo-showcase-subtitle {
+  margin-top: clamp(5rem, 11vw, 11rem);
+  margin-left: clamp(5rem, 13vw, 15rem);
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(1.3rem, 2vw, 2.5rem);
+  font-style: italic;
+}
+
+/* ---------- Footer: big sign-off wordmark, then the compact contact bar ---------- */
+
+.footer-wordmark {
+  background: #e8e8e8;
+  padding: clamp(2rem, 6vw, 3.5rem) 0 1rem;
+  text-align: center;
+}
+
+/* SVG + textLength forces the glyph run to span the full viewBox width no matter
+   the word or font metrics, so it stretches edge-to-edge instead of just sizing up. */
+.footer-wordmark-text {
+  display: block;
+  width: 100%;
+  margin-bottom: 0.25rem;
+}
+
+.footer-wordmark-text text {
+  font-family: 'Bricolage Grotesque', var(--font);
+  font-weight: 800;
+  font-size: 340px;
+  fill: var(--fg);
+}
+
+.footer-wordmark-copyright {
+  font-size: 0.8rem;
+  color: rgba(var(--fg-rgb), 0.45);
+  padding: 0 2rem;
+}
+
+.site-footer {
+  /* matches .photo-showcase's background so the section right above it hands
+     off to the footer with no visible seam — always fully opaque from the
+     start (no scroll-triggered fade-in) since a transparent footer would
+     reveal the page's white background underneath for a moment, i.e.
+     exactly the white gap this is here to avoid */
+  background: #e8e8e8;
+  /* extra right padding clears .hero-contact — that button is fixed at
+     right:1.5rem, ~64px wide, and floats over every section including this
+     one, so the footer's own right-aligned text needs room to not sit under it */
+  padding: 2.5rem 7rem 0 3rem;
+}
+
+.site-footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem 2.5rem;
+}
+
+.site-footer-copyright {
+  font-size: 0.85rem;
+  color: rgba(var(--fg-rgb), 0.6);
+}
+
+.site-footer-top {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--fg);
+  cursor: pointer;
+}
+
+.site-footer-top-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--fg);
+  color: var(--bg);
+  transition: transform 200ms ease;
+}
+
+.site-footer-top:hover .site-footer-top-icon {
+  transform: translateY(-3px);
+}
+
+.site-footer-top-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.site-footer-contact {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.site-footer-email {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--fg);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 200ms ease;
+}
+
+.site-footer-email:hover {
+  border-color: var(--fg);
+}
+
+.site-footer-location {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgba(var(--fg-rgb), 0.5);
+}
+
+/* ---------- Project page: standalone page each gallery thumbnail links to ---------- */
+
+.project-page-nav {
+  position: fixed;
+  top: 1.5rem;
+  left: 1.5rem;
+  z-index: 50;
+}
+
+.project-page-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.1rem;
+  border-radius: 999px;
+  background: var(--fg);
+  color: var(--bg);
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  transition: transform 200ms ease;
+}
+
+.project-page-back:hover {
+  transform: scale(1.05);
+}
+
+.project-page-back svg {
+  width: 16px;
+  height: 16px;
+}
+
+.project-page-media {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--media-placeholder);
+}
+
+.project-page-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.project-page-media.missing img {
+  display: none;
+}
+
+/* Hero video: a play button over the big top image; clicking plays the video
+   inline in this same box (see .project-page-media-video further down) */
+.project-page-media--video {
+  cursor: pointer;
+}
+
+.project-page-media--video .project-page-play-icon {
+  width: 84px;
+  height: 84px;
+}
+
+.project-page-media--video .project-page-play-icon svg {
+  width: 30px;
+  height: 30px;
+}
+
+/* YouTube embed container */
+.project-page-media--youtube {
+  position: relative;
+  width: 100%;
+  height: 100vh; /* Gör att den tar samma fullhöjd som din vanliga hero-media */
+  overflow: hidden;
+  background: var(--media-placeholder);
+}
+
+.project-page-media--youtube iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.project-page-media.missing::after {
+  content: attr(data-index);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 6rem;
+  font-weight: 700;
+  color: rgba(var(--fg-rgb), 0.15);
+}
+
+.project-page-story {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 4rem 2rem 4rem;
+}
+
+.project-page-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.8rem;
+  color: rgba(var(--fg-rgb), 0.5);
+  margin-bottom: 0.75rem;
+}
+
+.project-page-title {
+  font-family: 'Bricolage Grotesque', var(--font);
+  font-weight: 800;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  margin-bottom: 1.5rem;
+}
+
+.project-page-text {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: rgba(var(--fg-rgb), 0.75);
+}
+
+.project-page-switch {
+  display: flex;
+  justify-content: space-between;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0 2rem 6rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.project-page-switch a {
+  color: var(--fg);
+  text-decoration: none;
+  opacity: 0.6;
+  transition: opacity 200ms ease;
+}
+
+.project-page-switch a:hover {
+  opacity: 1;
+}
+
+/* Gallery: extra images below the story. Bigger than before and with a looser,
+   more editorial rhythm — every third tile runs full width instead of every
+   tile being the same size — then each one opens large in the lightbox below
+   on click, same hover-affordance idea as the hero video's play button. */
+.project-page-gallery {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 2rem 6rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.project-page-gallery-caption {
+  grid-column: 1 / -1;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.project-page-gallery-caption p {
+  margin: 0 auto;
+  max-width: 700px;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: rgba(var(--fg-rgb), 0.75);
+  font-family: var(--font);
+}
+
+.project-page-gallery-item:nth-child(3n+1) {
+  grid-column: 1 / -1;
+}
+
+.project-page-gallery-item.project-page-gallery-item--wide {
+  grid-column: 1 / -1;
+  aspect-ratio: 21 / 9;
+}
+
+.project-page-gallery-item.project-page-gallery-item--standard {
+  grid-column: auto;
+  aspect-ratio: 16 / 10;
+}
+
+.project-page-gallery-item.project-page-gallery-item--standard:nth-child(3n+1) {
+  grid-column: auto;
+  aspect-ratio: 16 / 10;
+}
+
+.project-page-gallery-item {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: 14px;
+  background: var(--media-placeholder);
+  cursor: pointer;
+}
+
+.project-page-gallery-item:nth-child(3n+1) {
+  aspect-ratio: 21 / 9;
+}
+
+.project-page-gallery-item img,
+.project-page-gallery-item video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 700ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.project-page-gallery-item:hover img,
+.project-page-gallery-item:hover video {
+  transform: scale(1.06);
+}
+
+.project-page-gallery-item--video video {
+  background: var(--media-placeholder);
+}
+
+.project-page-slider {
+  max-width: 1300px;
+  margin: 0 auto 3rem;
+  padding: 0 2rem;
+}
+
+.project-page-slider-track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(180px, 1fr);
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 0.75rem;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(var(--fg-rgb), 0.2) transparent;
+}
+
+.project-page-slider-track::-webkit-scrollbar {
+  height: 8px;
+}
+
+.project-page-slider-track::-webkit-scrollbar-thumb {
+  background: rgba(var(--fg-rgb), 0.2);
+  border-radius: 999px;
+}
+
+.project-page-slider-track img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+  border-radius: 14px;
+  scroll-snap-align: start;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.project-page-gallery-item::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0);
+  transition: background 300ms ease;
+}
+
+.project-page-gallery-item:hover::after {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.project-page-gallery-expand {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.94);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.8);
+  transition: opacity 250ms ease, transform 250ms ease;
+  pointer-events: none;
+}
+
+.project-page-gallery-item:hover .project-page-gallery-expand {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.project-page-gallery-expand svg {
+  width: 18px;
+  height: 18px;
+  color: #111;
+}
+
+/* ---------- Project page: lightbox — opens whichever gallery tile was clicked
+   at full size, with prev/next through the rest of the set. Injected once by
+   project.js if a gallery is present, so it's the same markup on every page. ---------- */
+.project-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 10, 10, 0.94);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 300ms ease;
+}
+
+.project-lightbox.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.project-lightbox-img {
+  max-width: min(88vw, 1400px);
+  max-height: 86vh;
+  object-fit: contain;
+  border-radius: 8px;
+  transform: scale(0.94);
+  transition: transform 350ms cubic-bezier(0.16, 0.84, 0.44, 1);
+}
+
+.project-lightbox.is-open .project-lightbox-img {
+  transform: scale(1);
+}
+
+.project-lightbox-close,
+.project-lightbox-prev,
+.project-lightbox-next {
+  position: fixed;
+  z-index: 901;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 200ms ease, transform 200ms ease;
+}
+
+.project-lightbox-close:hover,
+.project-lightbox-prev:hover,
+.project-lightbox-next:hover {
+  background: rgba(255, 255, 255, 0.22);
+  transform: scale(1.06);
+}
+
+.project-lightbox-close svg,
+.project-lightbox-prev svg,
+.project-lightbox-next svg {
+  width: 20px;
+  height: 20px;
+}
+
+.project-lightbox-close {
+  top: 1.5rem;
+  right: 1.5rem;
+}
+
+.project-lightbox-prev,
+.project-lightbox-next {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.project-lightbox-prev:hover,
+.project-lightbox-next:hover {
+  transform: translateY(-50%) scale(1.06);
+}
+
+.project-lightbox-prev { left: 1.5rem; }
+.project-lightbox-next { right: 1.5rem; }
+
+body.lightbox-open {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-lightbox,
+  .project-lightbox-img {
+    transition-duration: 1ms;
+  }
+}
+
+/* Hero video: a play button sits over the top image; clicking swaps in a
+   real <video> in the same box instead of navigating anywhere */
+.project-page-play-button {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.project-page-play-button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0);
+  transition: background 250ms ease;
+}
+
+.project-page-media--video:hover .project-page-play-button::before {
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.project-page-play-icon {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.94);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 250ms ease;
+}
+
+.project-page-media--video:hover .project-page-play-icon {
+  transform: scale(1.1);
+}
+
+.project-page-play-icon svg {
+  width: 20px;
+  height: 20px;
+  color: #111;
+  margin-left: 3px; /* optical centering for the play triangle */
+}
+
+/* Once clicked, the video covers the still image and the play button fades out
+   — same box, same size, just playing instead of static. Pausing crossfades
+   back to the thumbnail (and the play button) rather than leaving a paused
+   video frame showing; pressing play again resumes from the same spot since
+   the video element itself is never removed or reset, just hidden. */
+.project-page-media-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  /* not interactive while paused/hidden — otherwise a click meant to resume
+     playback lands on the <video> itself, and the browser's own native
+     click-to-toggle fires alongside our explicit resume call, immediately
+     pausing it again right after it starts */
+  pointer-events: none;
+  transition: opacity 200ms ease;
+}
+
+.project-page-media--video.is-playing:not(.is-paused) .project-page-media-video {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.project-page-media--video.is-playing {
+  cursor: default;
+}
+
+.project-page-media--video.is-playing:not(.is-paused) img {
+  opacity: 0;
+}
+
+.project-page-media--video.is-playing:not(.is-paused) .project-page-play-button {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.project-page-media img,
+.project-page-play-button {
+  transition: opacity 200ms ease;
+}
+
+@media (max-width: 780px) {
+  .project-page-gallery {
+    grid-template-columns: 1fr;
+  }
+
+  .project-page-gallery-item:nth-child(3n+1) {
+    aspect-ratio: 16 / 10;
+  }
+
+  .project-lightbox-prev,
+  .project-lightbox-next {
+    width: 40px;
+    height: 40px;
+  }
+
+  .project-lightbox-prev { left: 0.75rem; }
+  .project-lightbox-next { right: 0.75rem; }
+  .project-lightbox-close { top: 1rem; right: 1rem; }
+
+  .about {
+    padding: 4rem 1.5rem;
+  }
+
+  .about-media--hero {
+    height: 50vw;
+    margin: 2rem 0 3rem;
+  }
+
+  .about-split,
+  .about-timeline-section {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .about-split-media,
+  .about-media--timeline {
+    position: static;
+  }
+
+  .about-media--timeline {
+    order: -1;
+  }
+
+  .photo-showcase {
+    min-height: 290vh;
+  }
+
+  .photo-showcase-stage {
+    min-height: 560px;
+  }
+
+  .photo-showcase-kicker {
+    top: 1.25rem;
+    left: 1.25rem;
+  }
+
+  .photo-showcase-grid {
+    width: calc(88vw - 2rem);
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.55rem;
+  }
+
+  .photo-showcase-title {
+    font-size: clamp(3.5rem, 18vw, 6rem);
+  }
+
+  .photo-showcase-subtitle {
+    margin-top: 5rem;
+    margin-left: 4.5rem;
+    font-size: 1.2rem;
+  }
+
+  .site-footer {
+    padding: 2rem 1.5rem;
+  }
+
+  .site-footer-inner {
+    justify-content: flex-start;
+  }
+
+  .photo-gallery-stage {
+    top: 47%;
+    left: 1.25rem;
+    right: 1.25rem;
+    height: 58vh;
+  }
+
+  .photo-gallery-stage img { object-fit: contain; }
+
+  .photo-gallery-rail {
+    top: auto;
+    bottom: 1.25rem;
+    left: 50%;
+    flex-direction: row;
+    max-width: calc(100vw - 2.5rem);
+    overflow-x: auto;
+    gap: 0.45rem;
+    transform: translateX(-50%);
+  }
+
+  .photo-gallery-thumb {
+    width: clamp(31px, 10vw, 48px);
+    transform: translateY(calc(var(--wave-offset, 0) * -0.22)) scale(var(--wave-scale, 0.7));
+    transform-origin: center bottom;
+  }
+
+  .photo-gallery-stop { min-height: 100svh; }
+
+  .photo-gallery-back { display: none; }
+}
+
+/* ---------- Projects showcase: every project, full screen, stacked — just
+   scroll straight down through them, no text ---------- */
+
+.projects-showcase {
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4vh;
+  padding: 5vh 0;
+}
+
+.projects-showcase-item {
+  position: relative;
+  display: block;
+  width: 88vw;
+  max-width: 1400px;
+  height: 86vh;
+  overflow: hidden;
+}
+
+.projects-showcase-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 600ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.projects-showcase-item:hover img {
+  transform: scale(1.05);
+}
+
+/* Progress indicator: fixed on the right edge, one dash per project — the
+   current one (tracked via scroll position) morphs into a filled, numbered
+   circle. Clicking any of them scrolls precisely to that project. */
+.projects-showcase-progress {
+  position: fixed;
+  top: 50%;
+  right: 1.5rem;
+  transform: translateY(-50%);
+  z-index: 600;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.projects-showcase-dot {
+  width: 20px;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(var(--fg-rgb), 0.18);
+  border: none;
+  padding: 0;
+  color: transparent;
+  font-size: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: width 250ms ease, height 250ms ease, border-radius 250ms ease,
+    background 250ms ease, color 150ms ease, font-size 150ms ease;
+}
+
+.projects-showcase-dot.is-active {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--fg);
+  color: var(--bg);
+  font-size: 0.7rem;
+  font-weight: 700;
+}

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simon — 3D Designer & Gaussian Splatting Artist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <a class="site-brand" href="index.html">Simon Strandanger</a>
+
+  <nav class="site-nav">
+    <a class="site-nav-link is-active" href="index.html">Hem</a>
+    <a class="site-nav-link" href="photograph.html">Foton</a>
+    <a class="site-nav-link" href="projects.html">Projekt</a>
+  </nav>
+
+  <!-- Intro: plays once on load, cycles "hello" through languages, then wipes away -->
+  <div id="intro" aria-hidden="true">
+    <div class="curtain curtain-left"></div>
+    <div class="curtain curtain-right"></div>
+    <span id="intro-word" class="intro-word"></span>
+  </div>
+
+  <main id="main-content">
+    <!-- Projects: first image curtains open, rest unfold outward, then it's a horizontal gallery -->
+    <section class="projects" id="projects">
+      <div class="projects-track" id="projects-track">
+        <a class="project-item" data-index="01" href="projects/project-1.html">
+          <div class="project-item-clip">
+            <img class="project-item-img" src="images/carousel/1.jpg" alt="Projekt 1" onerror="this.parentElement.parentElement.classList.add('missing')">
+          </div>
+        </a>
+        <a class="project-item" data-index="02" href="projects/project-2.html">
+          <div class="project-item-clip">
+            <img class="project-item-img" src="images/carousel/2.jpg" alt="Projekt 2" onerror="this.parentElement.parentElement.classList.add('missing')">
+          </div>
+        </a>
+        <a class="project-item" data-index="03" href="projects/project-3.html">
+          <div class="project-item-clip">
+            <img class="project-item-img" src="images/carousel/3.jpg" alt="Projekt 3" onerror="this.parentElement.parentElement.classList.add('missing')">
+          </div>
+        </a>
+        <a class="project-item" data-index="04" href="projects/project-4.html">
+          <div class="project-item-clip">
+            <img class="project-item-img" src="images/carousel/4.jpg" alt="Projekt 4" onerror="this.parentElement.parentElement.classList.add('missing')">
+          </div>
+        </a>
+        <a class="project-item" data-index="05" href="projects/project-5.html">
+          <div class="project-item-clip">
+            <img class="project-item-img" src="images/carousel/5.jpg" alt="Projekt 5" onerror="this.parentElement.parentElement.classList.add('missing')">
+          </div>
+        </a>
+        <a class="project-item" data-index="06" href="projects/project-6.html">
+          <div class="project-item-clip">
+            <img class="project-item-img" src="images/carousel/6.jpg" alt="Projekt 6" onerror="this.parentElement.parentElement.classList.add('missing')">
+          </div>
+        </a>
+        <a class="project-item anchor" data-index="07" href="projects/project-7.html">
+          <div class="project-item-clip">
+            <img class="project-item-img" src="images/carousel/7.jpg" alt="Projekt 7" onerror="this.parentElement.parentElement.classList.add('missing')">
+          </div>
+        </a>
+        <a class="project-item" data-index="08" href="projects/project-8.html">
+          <div class="project-item-clip">
+            <img class="project-item-img" src="images/carousel/8.jpg" alt="Projekt 8" onerror="this.parentElement.parentElement.classList.add('missing')">
+          </div>
+        </a>
+        <a class="project-item" data-index="09" href="projects/project-9.html">
+          <div class="project-item-clip">
+            <img class="project-item-img" src="images/carousel/9.jpg" alt="Projekt 9" onerror="this.parentElement.parentElement.classList.add('missing')">
+          </div>
+        </a>
+      </div>
+
+      <div class="projects-footer">
+        <p class="projects-hint">Scroll / Drag</p>
+        <div class="projects-progress" id="projects-progress"></div>
+      </div>
+    </section>
+
+    <!-- About: who I am / what I do — doubles as the curtain itself while it rides up
+         over the carousel (curtain-mode below), then settles into normal page flow -->
+    <section class="about curtain-mode" id="about">
+      <div class="about-inner">
+
+        <!-- Curtain face: the only content visible while this section rides up as the
+             fixed "curtain" — must read as complete on its own for however long that takes. -->
+        <div class="about-curtainface">
+          <p class="about-eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span>Om mig</p>
+          <h2 class="about-heading">Detta är mitt arbete inom digital visualiering, fotografi och fotogrammetri åren 2025 och 2026. Just nu letar jag efter fler möjligheter att utveckla mina färdigheter inom dessa områden.</h2>
+          <span class="about-scrollcue" aria-hidden="true"></span>
+        </div>
+
+        <!-- Reveal: everything below the curtain's first viewport — normal document flow
+             once handoff has happened. -->
+        <div class="about-reveal" inert>
+
+          <!-- Hero image: closes out the curtain-face moment before the page settles
+               into normal scroll. Placeholder — drop a real file at this exact path
+               and it replaces the gradient automatically (same pattern as the project
+               galleries elsewhere on the site). -->
+          <div class="about-media about-media--hero about-reveal-item">
+            <img src="images/about/hero.jpg" alt="" onerror="this.parentElement.classList.add('missing')">
+          </div>
+
+          <!-- Split section: short label + image on one side, the full bio on the other. -->
+          <div class="about-split">
+            <div class="about-split-media about-reveal-item">
+              <p class="about-split-label">Bakgrund</p>
+              <div class="about-media about-media--small">
+                <img src="images/about/bio.jpg" alt="" onerror="this.parentElement.classList.add('missing')">
+              </div>
+            </div>
+            <div class="about-split-text about-reveal-item about-reveal-delay-1">
+              <p>Parallellt med mina studier har jag byggt upp erfarenhet inom olika typer av media. Som 3D-grafiker arbetar jag främst med <strong>modellering, visualisering och rendering av digitala tvillingar</strong> — ett exempel är ett av mina senaste arbeten, en omfattande visualisering åt <strong>Renta Maskinuthyrning</strong>. Jag arbetar även med <strong>foto- och videoproduktion av sportevenemang genom BCK Media</strong>, och har erfarenhet av <strong>GIS och geografisk analys genom studier i ArcGIS</strong>.</p>
+              <p>Utöver de tekniska projekten har jag arbetat i serviceyrken och haft flera ledarroller — bland annat som <strong>fönsterputsare på Hemfrid</strong>, och som <strong>tränare och ledare inom Järfällagymnasterna</strong></p>
+              <p>Jag trivs i roller där teknik, struktur och problemlösning kombineras med praktiskt arbete och samarbete. Mitt mål är att fortsätta utvecklas inom digital visualisering och samhällsbyggnad, och bidra till projekt där tekniska lösningar skapar konkret nytta.</p>
+            </div>
+          </div>
+
+          <!-- Timeline: text on one side, image on the other — same two-column idea as
+               the split section above, with a small clean timeline instead of prose. -->
+          <div class="about-timeline-section">
+            <div class="about-timeline-col">
+              <h3 class="about-timeline-heading about-reveal-item">Arbeten</h3>
+              <div class="about-timeline">
+                <div class="about-timeline-item">
+                  <p class="about-timeline-period">2024</p>
+                  <h4 class="about-timeline-role">Digital tvilling av Gymnastikhall</h4>
+                  <p class="about-timeline-org">Järfällagymnasterna</p>
+                  <p class="about-timeline-text">Fotorealistisk 3D-visualisering av JG-hallen, där hela interiören modellerades, texturerades, ljussattes och animerades i Blender. Modellen spelas idag på skärmar i hallen.</p>
+                </div>
+                <div class="about-timeline-item">
+                  <p class="about-timeline-period">2025</p>
+                  <h4 class="about-timeline-role">Visualisering av klocka</h4>
+                  <p class="about-timeline-org">Ozia Watches</p>
+                  <p class="about-timeline-text">3D-Visualisering av klockor för det nystartade företaget Ozia Watches. Materialet användes i marknadsföring och produktpresentation.</p>
+                </div>
+                <div class="about-timeline-item">
+                  <p class="about-timeline-period">2025</p>
+                  <h4 class="about-timeline-role">Foto Rikstrean</h4>
+                  <p class="about-timeline-org">BCK Media</p>
+                  <p class="about-timeline-text">Fotoförsäljning på gymnastiktävlingen Riksfyran i Järfälla. Bilder såldes i paket till klubbarna</p>
+                </div>
+                <div class="about-timeline-item">
+                  <p class="about-timeline-period">2026</p>
+                  <h4 class="about-timeline-role">Lokalplanering med digital tvilling i Järfälla</h4>
+                  <p class="about-timeline-org">Renta Maskinuthyrning Järfälla</p>
+                  <p class="about-timeline-text">Stor skalenlig visualisering av en industrilokal i första skedet av inredning inför inflytt.</p>
+                </div>
+                <div class="about-timeline-item">
+                  <p class="about-timeline-period">2026</p>
+                  <h4 class="about-timeline-role">Foto Studentfirande Fridegårdsgymnasiet</h4>
+                  <p class="about-timeline-org">BCK Media</p>
+                  <p class="about-timeline-text">Foto och bildförsäljning för BCK Media på Fridegårdsgymnasiets studentfirande.</p>
+                </div>
+                <div class="about-timeline-item">
+                  <p class="about-timeline-period">2026</p>
+                  <h4 class="about-timeline-role">Foto Sinclairs Stockholm</h4>
+                  <p class="about-timeline-org">BCK Media</p>
+                  <p class="about-timeline-text">Fotoförsäljning för BCK Media på dansuppvisningen Sinclairs på Stockholm Statsteater.</p>
+                </div>
+                <div class="about-timeline-item">
+                  <p class="about-timeline-period">2026</p>
+                  <h4 class="about-timeline-role">Verktyg för nerfbaserad fotogrammetri</h4>
+                  <p class="about-timeline-org">Ingen kund än så länge</p>
+                  <p class="about-timeline-text">Utveckling av ett verktyg för automatisk 3D-scanning för digitaliering av miljöer inne och ute. Jag planerar att använda verktyget för att underlätta planering vid byggprojekt i Järfälla.</p>
+                </div>
+              </div>
+            </div>
+            <div class="about-media about-media--timeline about-reveal-item">
+              <img src="images/about/timeline.jpg" alt="" onerror="this.parentElement.classList.add('missing')">
+            </div>
+          </div>
+
+          <div class="about-cta about-reveal-item">
+            <a class="btn-cv" href="cv.pdf" download>
+              <span>Ladda ner lista</span>
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 3v12"></path>
+                <path d="m7 10 5 5 5-5"></path>
+                <path d="M5 21h14"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Photograph: cards fly in and settle as the section enters -->
+    <section class="photo-showcase" id="photograph">
+      <div class="photo-showcase-stage">
+        <p class="photo-showcase-kicker">Selected images</p>
+        <h2 class="photo-showcase-title">Photograph</h2>
+        <p class="photo-showcase-subtitle">into my world</p>
+        <div class="photo-showcase-body">
+          <div class="photo-showcase-grid" aria-label="Ett urval av fotografier">
+            <div class="photo-showcase-card"><img src="images/showcase/1.jpg" alt="Fotografi 1"></div>
+            <div class="photo-showcase-card"><img src="images/showcase/2.jpg" alt="Fotografi 2"></div>
+            <div class="photo-showcase-card"><img src="images/showcase/3.jpg" alt="Fotografi 3"></div>
+            <div class="photo-showcase-card"><img src="images/showcase/4.jpg" alt="Fotografi 4"></div>
+            <div class="photo-showcase-card"><img src="images/showcase/5.jpg" alt="Fotografi 5"></div>
+            <div class="photo-showcase-card"><img src="images/showcase/6.jpg" alt="Fotografi 6"></div>
+            <div class="photo-showcase-card"><img src="images/showcase/7.jpg" alt="Fotografi 7"></div>
+            <div class="photo-showcase-card"><img src="images/showcase/8.jpg" alt="Fotografi 8"></div>
+            <div class="photo-showcase-card"><img src="images/showcase/9.jpg" alt="Fotografi 9"></div>
+            <div class="photo-showcase-card"><img src="images/showcase/10.jpg" alt="Fotografi 10"></div>
+            <div class="photo-showcase-card"><img src="images/showcase/11.jpg" alt="Fotografi 11"></div>
+            <div class="photo-showcase-card"><img src="images/showcase/12.jpg" alt="Fotografi 12"></div>
+          </div>
+
+          <a class="photo-showcase-cta" href="photograph.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"></path><path d="M7 7h10v10"></path></svg>
+            Se alla bilder
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"></path><path d="M7 7h10v10"></path></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer: just how to get in touch -->
+  <footer class="site-footer" id="site-footer">
+    <div class="site-footer-inner">
+      <p class="site-footer-copyright">&copy; 2026 Simon Strandanger</p>
+      <button class="site-footer-top" type="button">
+        <span class="site-footer-top-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"></path><path d="m5 12 7-7 7 7"></path></svg>
+        </span>
+        Till toppen
+      </button>
+      <div class="site-footer-contact">
+        <a class="site-footer-email" href="mailto:siblon06@gmail.com">siblon06@gmail.com</a>
+        <p class="site-footer-location">Göteborg, SE</p>
+      </div>
+    </div>
+    <div class="footer-wordmark">
+      <svg class="footer-wordmark-text" viewBox="0 0 1000 258" role="img" aria-label="Simon">
+        <text x="0" y="253" textLength="1000" lengthAdjust="spacingAndGlyphs">Simon</text>
+      </svg>
+      <p class="footer-wordmark-copyright">Alla rättigheter förbehållna &copy; 2026 Simon Strandanger</p>
+    </div>
+  </footer>
+
+  <!-- Contact button: fixed to the viewport, follows you down the whole page -->
+  <a class="hero-contact" id="hero-contact" href="mailto:siblon06@gmail.com" aria-label="Kopiera min mejladress">
+    <span class="hero-contact-label" aria-live="polite">Email copied</span>
+    <span class="hero-contact-icon-wrap">
+      <svg class="hero-contact-icon hero-contact-icon-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+        <path d="m22 6-10 7L2 6"></path>
+      </svg>
+      <svg class="hero-contact-icon hero-contact-icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 6 9 17l-5-5"></path>
+      </svg>
+    </span>
+  </a>
+
+  <noscript>
+    <style>#intro{display:none!important;}#main-content{opacity:1!important;transform:none!important;}</style>
+  </noscript>
+
+  <script src="js/shared.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>
