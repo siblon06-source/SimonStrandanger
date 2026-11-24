@@ -17,8 +17,8 @@ Den här filen är arbetets "sparpunkt". Om arbetet avbryts: läs den här filen
 |----|------|----------|--------|
 | 1 | `fix/bugs-and-cleanup` | Buggfixar, filnamn, titlar, README | PR #1 öppen |
 | 2 | `feat/cv-and-repo-size` (bygger på gren 1) | cv.pdf, `docs/MANUAL-STEPS.md`, .gitignore, untracka source-material | PR #2 öppen |
-| 3 | `feat/project-pages-redesign` (bygger på gren 2) | Ny design projektsidor (kantig, ljus, faktarad) | KLAR (PR öppnas) |
-| 4 | `feat/merge-2-7-and-arcgis` | Slå ihop 2+7, ny ArcGIS-sida | EJ PÅBÖRJAD (kräver PDF + text av Simon) |
+| 3 | `feat/project-pages-redesign` (bygger på gren 2) | Ny design projektsidor (kantig, ljus, faktarad) | PR #3 öppen |
+| 4 | `feat/merge-2-7-and-arcgis` (bygger på gren 3) | Projekt 2+7 sammanslagna till projekt 2; projekt 7 är nu ArcGIS-rapporten | KLAR (PR öppnas). Väntar på bilder + PDF från Simon |
 | 5 | `feat/landing-polish` | Om mig / Bakgrund / Arbeten | EJ PÅBÖRJAD |
 
 ## Beslut och anteckningar
@@ -28,3 +28,11 @@ Den här filen är arbetets "sparpunkt". Om arbetet avbryts: läs den här filen
 - PR:erna ligger i en kedja (1 → 2 → 3 → 4 → 5). Merga i ordning; GitHub byter basgren automatiskt.
 - CV:t innehöll bara e-post (ingen adress/telefon), så cv.pdf är oförändrad.
 - Faktaraden på projektsidor: Bilder/Video räknas automatiskt av project.js. Roll/Tid läggs för hand i `<dl class="project-page-facts">` (finns bara på projekt 3 än så länge).
+
+## PR 4: vad Simon behöver lägga in
+
+- Projekt 7 = ArcGIS-rapporten (`projects/project-7.html`). Gamla utrustningsbilder flyttades till `images/projects/project-2/equipment/`.
+- Bildplatser är tomma `<div class="project-page-gallery-item gis-figure-media">` (Figur 1–6, Bilaga 1). Lägg en `<img src="../images/projects/project-7/NAMN.jpg" alt="...">` inuti, så får de lightbox och räknas i faktaraden.
+- PDF: lägg rapporten som `files/sveriges-tillganglighet-till-fots.pdf`.
+- Miniatyrer för projekt 7: `images/carousel/7.jpg` (startsidan) och `images/projects/project-7/hero.jpg` (projects.html). Tills de finns visas en tom ruta.
+- Refererenser att komplettera: Trafikverket (2025) och årtal för GSD-Höjddata (2004 i tabellen, 2020 i diskussionen i originalrapporten).
