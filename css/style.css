@@ -1784,6 +1784,382 @@ html.reduce-motion .about-timeline::before {
   color: #fff;
 }
 
+/* Section heading inside a project page (used when a page has more than one gallery). */
+.project-page-section {
+  width: var(--pp-w);
+  margin: 0 auto;
+  padding: 2.5rem 0 1.75rem;
+  border-top: 1px solid var(--pp-line);
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: 1.5rem;
+  align-items: end;
+}
+
+.project-page-section-title {
+  grid-column: 1 / 8;
+  font-family: 'Bricolage Grotesque', var(--font);
+  font-weight: 800;
+  font-size: clamp(1.6rem, 3.4vw, 2.6rem);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.project-page-section-text {
+  grid-column: 8 / -1;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(var(--fg-rgb), 0.7);
+}
+
+/* ---------- Report-style project page (the ArcGIS project) ---------- */
+
+.gis-actions {
+  width: var(--pp-w);
+  margin: -1.5rem auto 3.5rem;
+}
+
+.gis-download {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.95rem 1.4rem;
+  border: 1px solid var(--fg);
+  color: var(--fg);
+  text-decoration: none;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: background 200ms ease, color 200ms ease;
+}
+
+.gis-download svg {
+  width: 16px;
+  height: 16px;
+}
+
+.gis-download:hover {
+  background: var(--fg);
+  color: #fff;
+}
+
+.gis-section {
+  width: var(--pp-w);
+  margin: 0 auto;
+  padding: 4rem 0;
+  border-top: 1px solid var(--pp-line);
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: 1.5rem;
+  row-gap: 2.5rem;
+}
+
+.gis-section-head {
+  grid-column: 1 / 5;
+  align-self: start;
+}
+
+.gis-section-num {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-bottom: 0.9rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pp-muted);
+}
+
+.gis-section-num::before {
+  content: '';
+  width: 36px;
+  height: 2px;
+  background: var(--pp-accent);
+}
+
+.gis-section-head h2 {
+  font-family: 'Bricolage Grotesque', var(--font);
+  font-weight: 800;
+  font-size: clamp(1.7rem, 3.2vw, 2.6rem);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.gis-section-body {
+  grid-column: 5 / -1;
+}
+
+.gis-section-body p {
+  max-width: 68ch;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: rgba(var(--fg-rgb), 0.8);
+}
+
+.gis-section-body p + p {
+  margin-top: 1.1rem;
+}
+
+.gis-section-body em {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--fg);
+}
+
+/* Big-number band */
+.gis-stats {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  border-top: 1px solid var(--pp-line);
+  border-bottom: 1px solid var(--pp-line);
+}
+
+.gis-stat {
+  padding: 1.75rem 1.5rem;
+  border-left: 1px solid var(--pp-line);
+}
+
+.gis-stat:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+
+.gis-stat-value {
+  font-family: 'Bricolage Grotesque', var(--font);
+  font-weight: 800;
+  font-size: clamp(2.2rem, 4.6vw, 3.8rem);
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.gis-stat-value small {
+  font-size: 0.4em;
+  letter-spacing: 0;
+  margin-left: 0.3em;
+  color: var(--pp-muted);
+}
+
+.gis-stat-label {
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: rgba(var(--fg-rgb), 0.65);
+  max-width: 28ch;
+}
+
+/* Method steps */
+.gis-steps {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  counter-reset: step;
+}
+
+.gis-step {
+  padding-top: 1.25rem;
+  border-top: 2px solid var(--fg);
+  counter-increment: step;
+}
+
+.gis-step::before {
+  content: '0' counter(step);
+  display: block;
+  margin-bottom: 0.9rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--pp-accent);
+}
+
+.gis-step h3 {
+  font-family: 'Bricolage Grotesque', var(--font);
+  font-weight: 800;
+  font-size: 1.35rem;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.6rem;
+}
+
+.gis-step p {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: rgba(var(--fg-rgb), 0.72);
+}
+
+/* Data table */
+.gis-table-wrap {
+  grid-column: 1 / -1;
+  overflow-x: auto;
+}
+
+.gis-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.gis-table caption {
+  caption-side: top;
+  text-align: left;
+  padding-bottom: 0.9rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pp-muted);
+}
+
+.gis-table th,
+.gis-table td {
+  padding: 1rem 1.25rem 1rem 0;
+  text-align: left;
+  vertical-align: top;
+  border-top: 1px solid var(--pp-line);
+  line-height: 1.5;
+}
+
+.gis-table th {
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pp-muted);
+  border-top: 2px solid var(--fg);
+}
+
+.gis-table tr:last-child td {
+  border-bottom: 1px solid var(--pp-line);
+}
+
+/* Figures: empty media slots until images are added. Drop an <img> inside
+   .gis-figure-media and it gets the lightbox and the Bilder count for free. */
+.gis-figures {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2.5rem 12px;
+  align-items: start;
+}
+
+.gis-figure--full {
+  grid-column: 1 / -1;
+}
+
+.gis-figure {
+  margin: 0;
+}
+
+.project-page-gallery-item.gis-figure-media,
+.project-page-gallery-item.gis-figure-media:nth-child(3n+1) {
+  grid-column: auto;
+  aspect-ratio: 5 / 7;
+  background: #f1f1ee;
+}
+
+.project-page-gallery-item.gis-figure-media--wide,
+.project-page-gallery-item.gis-figure-media--wide:nth-child(3n+1) {
+  aspect-ratio: 2.2 / 1;
+}
+
+/* Once an image is in, show it whole at its own proportions (maps shouldn't be cropped). */
+.project-page-gallery-item.gis-figure-media:has(> img) {
+  aspect-ratio: auto;
+}
+
+.gis-figure-media > img {
+  height: auto;
+  object-fit: contain;
+}
+
+.gis-figure-media:not(:has(> img)) {
+  cursor: default;
+}
+
+.gis-figure-media:not(:has(> img))::after {
+  display: none;
+}
+
+.gis-figure figcaption {
+  margin-top: 0.9rem;
+  max-width: 62ch;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: rgba(var(--fg-rgb), 0.65);
+}
+
+.gis-figure figcaption a {
+  color: var(--fg);
+}
+
+.gis-figure figcaption strong {
+  color: var(--fg);
+  font-weight: 700;
+}
+
+.gis-references {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.gis-references li {
+  max-width: 68ch;
+  padding: 1rem 0;
+  border-top: 1px solid var(--pp-line);
+  font-size: 0.98rem;
+  line-height: 1.6;
+  color: rgba(var(--fg-rgb), 0.8);
+}
+
+.gis-references li:last-child {
+  border-bottom: 1px solid var(--pp-line);
+}
+
+.gis-references a {
+  color: var(--fg);
+}
+
+@media (max-width: 780px) {
+  .project-page-section-title,
+  .project-page-section-text {
+    grid-column: 1 / -1;
+  }
+
+  .project-page-section-text {
+    margin-top: 0.75rem;
+  }
+
+  .gis-section {
+    padding: 3rem 0;
+    row-gap: 1.75rem;
+  }
+
+  .gis-section-head,
+  .gis-section-body {
+    grid-column: 1 / -1;
+  }
+
+  .gis-steps {
+    grid-template-columns: 1fr;
+  }
+
+  .gis-figures {
+    grid-template-columns: 1fr;
+  }
+
+  .gis-stat,
+  .gis-stat:first-child {
+    padding: 1.25rem 1rem 1.25rem 0;
+    border-left: 0;
+  }
+
+  .gis-stat + .gis-stat {
+    border-top: 1px solid var(--pp-line);
+  }
+}
+
 /* Contact button: square on project pages too. */
 body:has(.project-page-nav) .hero-contact {
   border-radius: 0;
