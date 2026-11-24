@@ -15,9 +15,9 @@ Den här filen är arbetets "sparpunkt". Om arbetet avbryts: läs den här filen
 
 | PR | Gren | Innehåll | Status |
 |----|------|----------|--------|
-| 1 | `fix/bugs-and-cleanup` | Buggfixar, filnamn, titlar, README | KLAR (lokalt) |
-| 2 | `feat/cv-and-repo-size` (bygger på gren 1) | cv.pdf, `docs/MANUAL-STEPS.md`, .gitignore, untracka source-material | KLAR (lokalt) |
-| 3 | `feat/project-pages-redesign` | Ny design projektsidor | EJ PÅBÖRJAD |
+| 1 | `fix/bugs-and-cleanup` | Buggfixar, filnamn, titlar, README | PR #1 öppen |
+| 2 | `feat/cv-and-repo-size` (bygger på gren 1) | cv.pdf, `docs/MANUAL-STEPS.md`, .gitignore, untracka source-material | PR #2 öppen |
+| 3 | `feat/project-pages-redesign` (bygger på gren 2) | Ny design projektsidor (kantig, ljus, faktarad) | KLAR (PR öppnas) |
 | 4 | `feat/merge-2-7-and-arcgis` | Slå ihop 2+7, ny ArcGIS-sida | EJ PÅBÖRJAD (kräver PDF + text av Simon) |
 | 5 | `feat/landing-polish` | Om mig / Bakgrund / Arbeten | EJ PÅBÖRJAD |
 
@@ -25,4 +25,6 @@ Den här filen är arbetets "sparpunkt". Om arbetet avbryts: läs den här filen
 
 - Bröd-och-smör-regel: kantiga hörn (border-radius: 0) och ljust, modernt uttryck på projektsidorna.
 - CV-filen ligger som bilaga i chatten (Copy_of_Resume_1.pdf) och ska kopieras till `cv.pdf` i repots rot.
-- Claude hade vid arbetets start bara läsrätt till GitHub-repot, så pull requests måste skapas av Simon från brancherna (se MANUAL-STEPS.md när den finns).
+- PR:erna ligger i en kedja (1 → 2 → 3 → 4 → 5). Merga i ordning; GitHub byter basgren automatiskt.
+- CV:t innehöll bara e-post (ingen adress/telefon), så cv.pdf är oförändrad.
+- Faktaraden på projektsidor: Bilder/Video räknas automatiskt av project.js. Roll/Tid läggs för hand i `<dl class="project-page-facts">` (finns bara på projekt 3 än så länge).
