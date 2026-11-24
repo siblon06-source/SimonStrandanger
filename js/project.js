@@ -37,6 +37,53 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // ---------- Facts strip: counts are computed from the page itself so they never
+  // go stale. Anything written by hand in a <dl class="project-page-facts"> in the
+  // HTML (Roll, Tid, Verktyg, ...) comes first and the counts are appended. ----------
+
+  const story = document.querySelector('.project-page-story');
+  if (story) {
+    let facts = document.querySelector('.project-page-facts');
+    const imageCount = document.querySelectorAll('.project-page-gallery-item img').length;
+    const videoCount = document.querySelectorAll(
+      '.project-page-gallery-item video, .project-page-media--video, .project-page-media--youtube'
+    ).length;
+    const counts = [];
+    if (imageCount) counts.push(['Bilder', imageCount]);
+    if (videoCount) counts.push(['Video', videoCount]);
+
+    if (counts.length) {
+      if (!facts) {
+        facts = document.createElement('dl');
+        facts.className = 'project-page-facts';
+        story.after(facts);
+      }
+      counts.forEach(([label, value]) => {
+        const cell = document.createElement('div');
+        cell.innerHTML = `<dt>${label}</dt><dd>${value}</dd>`;
+        facts.appendChild(cell);
+      });
+    }
+  }
+
+  // ---------- Gallery reveal: tiles fade up as they scroll into view. Only when
+  // the browser supports it and motion isn't reduced; otherwise everything is
+  // simply visible. ----------
+
+  const revealTiles = Array.from(document.querySelectorAll('.project-page-gallery-item'));
+  if (revealTiles.length && 'IntersectionObserver' in window &&
+      !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.documentElement.classList.add('js-reveal');
+    const revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-visible');
+        revealObserver.unobserve(entry.target);
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+    revealTiles.forEach(tile => revealObserver.observe(tile));
+  }
+
   // ---------- Project gallery: click a tile to view it large, with prev/next
   // through the rest of the set. One lightbox built once and reused, rather
   // than per-page markup, since every project page has the same gallery shape. ----------
