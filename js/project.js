@@ -41,7 +41,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // through the rest of the set. One lightbox built once and reused, rather
   // than per-page markup, since every project page has the same gallery shape. ----------
 
-  const galleryItems = Array.from(document.querySelectorAll('.project-page-gallery-item'));
+  // Only image tiles open in the lightbox; video tiles play inline with their own
+  // controls (they have no <img>, which used to throw on click).
+  const galleryItems = Array.from(document.querySelectorAll('.project-page-gallery-item'))
+    .filter(item => item.querySelector('img'));
 
   if (galleryItems.length) {
     const EXPAND_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"></path><path d="M9 21H3v-6"></path><path d="M21 3l-7 7"></path><path d="M3 21l7-7"></path></svg>`;
@@ -123,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
       dot.textContent = String(i + 1);
       dot.setAttribute('aria-label', `Gå till projekt ${i + 1}`);
       dot.addEventListener('click', () => {
-        item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        showcaseItems[i].scrollIntoView({ behavior: 'smooth', block: 'center' });
       });
       showcaseProgress.appendChild(dot);
       return dot;
