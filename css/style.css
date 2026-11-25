@@ -1146,6 +1146,7 @@ html.reduce-motion .about-timeline::before {
   display: grid;
   place-items: center;
   overflow: hidden;
+  background: #e8e8e8; /* same as .photo-showcase; the heading's blend mode needs a backdrop inside the stage */
 }
 
 .photo-showcase-kicker {
@@ -1169,7 +1170,9 @@ html.reduce-motion .about-timeline::before {
 }
 
 .photo-showcase-grid {
-  width: min(61vw, 1250px);
+  /* the last term keeps grid + button inside the 100vh stage on wide, short screens
+     (grid height is ~3/4 of its width) — otherwise the button was cut off at the bottom */
+  width: min(61vw, 1250px, calc((max(100vh, 620px) - 13rem) * 1.3));
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: clamp(0.6rem, 1.1vw, 1.1rem);
@@ -1227,28 +1230,42 @@ html.reduce-motion .about-timeline::before {
   flex-shrink: 0;
 }
 
-.photo-showcase-title,
-.photo-showcase-subtitle {
+/* Heading sits in front of the photos (z-index above the cards' 3D transforms). White
+   text + mix-blend-mode: difference inverts against whatever is behind it: dark on the
+   light page, light over dark photos, so it stays readable as the images land. */
+.photo-showcase-heading {
   position: absolute;
-  z-index: 1;
-  color: #151515;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: #fff;
+  background: #111;
+  padding: clamp(1.2rem, 2.4vw, 2.4rem) clamp(1.6rem, 3.4vw, 3.4rem);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12);
   pointer-events: none;
 }
 
 .photo-showcase-title {
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: clamp(4.5rem, 11vw, 12rem);
-  font-weight: 400;
-  letter-spacing: -0.09em;
-  line-height: .8;
+  font-family: 'Bricolage Grotesque', var(--font);
+  font-size: clamp(3.2rem, 8vw, 8rem);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 0.95;
 }
 
 .photo-showcase-subtitle {
-  margin-top: clamp(5rem, 11vw, 11rem);
-  margin-left: clamp(5rem, 13vw, 15rem);
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: clamp(1.3rem, 2vw, 2.5rem);
-  font-style: italic;
+  margin-top: clamp(1rem, 1.6vw, 1.6rem);
+  font-size: clamp(0.8rem, 1.2vw, 1.15rem);
+  font-weight: 700;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--about-terracotta);
+  padding-left: 0.42em; /* balances the trailing letter-spacing so it centres optically */
 }
 
 /* ---------- Footer: big sign-off wordmark, then the compact contact bar ---------- */
@@ -2409,13 +2426,14 @@ body.lightbox-open {
   }
 
   .photo-showcase-title {
-    font-size: clamp(3.5rem, 18vw, 6rem);
+    font-size: clamp(3rem, 17vw, 6rem);
   }
 
   .photo-showcase-subtitle {
-    margin-top: 5rem;
-    margin-left: 4.5rem;
-    font-size: 1.2rem;
+    margin-top: 0.9rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.3em;
+    padding-left: 0.3em;
   }
 
   .site-footer {
