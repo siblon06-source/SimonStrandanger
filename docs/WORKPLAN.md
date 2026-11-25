@@ -18,8 +18,8 @@ Den här filen är arbetets "sparpunkt". Om arbetet avbryts: läs den här filen
 | 1 | `fix/bugs-and-cleanup` | Buggfixar, filnamn, titlar, README | PR #1 öppen |
 | 2 | `feat/cv-and-repo-size` (bygger på gren 1) | cv.pdf, `docs/MANUAL-STEPS.md`, .gitignore, untracka source-material | PR #2 öppen |
 | 3 | `feat/project-pages-redesign` (bygger på gren 2) | Ny design projektsidor (kantig, ljus, faktarad) | PR #3 öppen |
-| 4 | `feat/merge-2-7-and-arcgis` (bygger på gren 3) | Projekt 2+7 sammanslagna till projekt 2; projekt 7 är nu ArcGIS-rapporten | KLAR (PR öppnas). Väntar på bilder + PDF från Simon |
-| 5 | `feat/landing-polish` | Om mig / Bakgrund / Arbeten | EJ PÅBÖRJAD |
+| 4 | `feat/merge-2-7-and-arcgis` (bygger på gren 3) | Projekt 2+7 sammanslagna till projekt 2; projekt 7 är nu ArcGIS-rapporten | PR #4 öppen. Väntar på bilder + PDF från Simon |
+| 5 | `feat/landing-polish` (bygger på gren 4) | Om mig / Bakgrund / Arbeten | KLAR (PR öppnas) |
 
 ## Beslut och anteckningar
 
