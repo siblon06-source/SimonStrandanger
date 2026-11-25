@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Projekt 07 — Simon Strandanger</title>
+<title>Sveriges tillgänglighet till fots från vägar — Simon Strandanger</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -19,33 +19,219 @@
   </nav>
 
   <main>
-    <div class="project-page-media" data-index="07">
-      <img src="../images/projects/project-7/2d.jpg" alt="Projekt 07" onerror="this.parentElement.classList.add('missing')">
-    </div>
+    <!-- Optional hero image: add <div class="project-page-media"><img src="../images/projects/project-7/hero.jpg" alt="..."></div> here -->
 
     <div class="project-page-story">
-      <p class="project-page-eyebrow">Projekt 07</p>
-      <h1 class="project-page-title">Gymnastics equipment</h1>
-      <p class="project-page-text">These are 3D models of gymnastics equipment made for use in visualizations of buildings, sport and more.</p>
+      <p class="project-page-eyebrow">Projekt 07 · GIS</p>
+      <h1 class="project-page-title">Sveriges tillgänglighet till fots från vägar</h1>
+      <p class="project-page-text">Hur långt är det egentligen till närmsta väg? En GIS-analys i ArcGIS av var i Sverige man är längst från en vägförbindelse, räknat i gångtid över terräng i stället för i kilometer fågelvägen.</p>
     </div>
 
-    <div class="project-page-gallery">
-      <div class="project-page-gallery-item project-page-gallery-item--wide"><img src="../images/projects/project-7/8.png" alt="Projekt 07"></div>
-      <div class="project-page-gallery-item project-page-gallery-item--standard"><img src="../images/projects/project-7/gallery-2.jpg" alt="Projekt 07"></div>
-      <div class="project-page-gallery-item project-page-gallery-item--standard"><img src="../images/projects/project-7/gallery-3.jpg" alt="Projekt 07"></div>
-      <div class="project-page-gallery-item project-page-gallery-item--standard"><img src="../images/projects/project-7/gallery-4.jpg" alt="Projekt 07"></div>
-      <div class="project-page-gallery-item project-page-gallery-item--standard"><img src="../images/projects/project-7/gallery-6.jpg" alt="Projekt 07"></div>
-      <div class="project-page-gallery-item project-page-gallery-item--wide"><img src="../images/projects/project-7/4.png" alt="Projekt 07"></div>
-      <div class="project-page-gallery-item project-page-gallery-item--standard"><img src="../images/projects/project-7/12.png" alt="Projekt 07"></div>
-      <div class="project-page-gallery-item project-page-gallery-item--standard"><img src="../images/projects/project-7/70.png" alt="Projekt 07"></div>
-      <div class="project-page-gallery-item project-page-gallery-item--standard"><img src="../images/projects/project-7/80.png" alt="Projekt 07"></div>
-      <div class="project-page-gallery-item project-page-gallery-item--standard"><img src="../images/projects/project-7/11.png" alt="Projekt 07"></div>
-      <div class="project-page-gallery-item project-page-gallery-item--wide"><img src="../images/projects/project-7/jelkqn-b.png" alt="Projekt 07"></div>
-      <div class="project-page-gallery-item project-page-gallery-item--standard"><img src="../images/projects/project-7/5.png" alt="Projekt 07"></div>
-      <div class="project-page-gallery-item project-page-gallery-item--standard"><img src="../images/projects/project-7/2.png" alt="Projekt 07"></div>
-      <div class="project-page-gallery-item project-page-gallery-item--standard"><img src="../images/projects/project-7/6.png" alt="Projekt 07"></div>
-      <div class="project-page-gallery-item project-page-gallery-item--standard"><img src="../images/projects/project-7/c1.png" alt="Projekt 07"></div>
+    <dl class="project-page-facts">
+      <div><dt>Verktyg</dt><dd>ArcGIS</dd></div>
+      <div><dt>Cellstorlek</dt><dd>50 m</dd></div>
+      <div><dt>Mest avlägsen punkt</dt><dd>36,5 rke</dd></div>
+      <div><dt>Datakälla</dt><dd>Lantmäteriet</dd></div>
+    </dl>
+
+    <div class="gis-actions">
+      <a class="gis-download" href="../files/sveriges-tillganglighet-till-fots.pdf" download>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"></path><path d="m7 11 5 5 5-5"></path><path d="M5 21h14"></path></svg>
+        Ladda ner rapporten (PDF)
+      </a>
     </div>
+
+    <!-- 01 Introduktion -->
+    <section class="gis-section" id="introduktion">
+      <div class="gis-section-head">
+        <p class="gis-section-num">01</p>
+        <h2>Introduktion och mål</h2>
+      </div>
+      <div class="gis-section-body">
+        <p>Sett till befolkningstäthet är Sverige ett glest land. Enligt InTeGrate (2016) bodde det färre än 5 människor per kvadratkilometer i norra delen av landet. Uppfattningen blir en annan när man tittar på en vägkarta. Sverige täcks enligt Trafikverket (2025) av 58&nbsp;400 mil väg. För att sätta det i skala är det ungefär 60 meter väg per invånare, eller en kilometer väg per kvadratkilometer markyta.</p>
+        <p>Skogsbruk, metallindustri, elproduktion och andra näringar utnyttjar och utökar vägsystemet för att nå stora markytor. Det gör att landet, trots sin låga befolkningstäthet, innehåller relativt lite vildmark där känsliga ekosystem med skygga djur och klimatkänsliga växter ska rymmas.</p>
+        <p>Syftet med rapporten är att analysera Sveriges geografiska tillgänglighet för bilburna genom att undersöka avståndet mellan olika platser och närmaste vägförbindelse. Projektet besvarar två frågor: <em>1. Vilken är den mest avlägsna platsen i Sverige till fots från närmsta väg?</em> och <em>2. Hur stor del av Sverige ligger bortom en dagsmarsch från närmsta väg?</em></p>
+      </div>
+
+      <div class="gis-stats">
+        <div class="gis-stat">
+          <p class="gis-stat-value">58&nbsp;400<small>mil</small></p>
+          <p class="gis-stat-label">väg täcker Sverige enligt Trafikverket (2025)</p>
+        </div>
+        <div class="gis-stat">
+          <p class="gis-stat-value">60<small>m</small></p>
+          <p class="gis-stat-label">väg per invånare</p>
+        </div>
+        <div class="gis-stat">
+          <p class="gis-stat-value">1<small>km</small></p>
+          <p class="gis-stat-label">väg per kvadratkilometer markyta</p>
+        </div>
+      </div>
+
+      <div class="gis-figures">
+        <figure class="gis-figure gis-figure--full">
+          <div class="project-page-gallery-item gis-figure-media gis-figure-media--wide"></div>
+          <figcaption><strong>Figur 1.</strong> Världskarta över uppskattad befolkningstäthet i antal personer per kvadratkilometer år 2015. Bild från <em>InTeGrate's Earth-focused Modules and Courses for the Undergraduate Classroom</em> (<a href="https://serc.carleton.edu/167549">InTeGrate</a>, 2016).</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- 02 Metod -->
+    <section class="gis-section" id="metod">
+      <div class="gis-section-head">
+        <p class="gis-section-num">02</p>
+        <h2>Metod</h2>
+      </div>
+      <div class="gis-section-body">
+        <p>Målet är att producera en karta som i varje cell visar avståndet till närmsta väg, med hänsyn till tröghetsfaktorer som terräng, marktyp och barriärer. Verktyget <em>Distance Accumulation</em> kan göra precis en sådan uträkning. Det kräver ett tröghetsraster (cost raster) som anger motståndet i varje marktyp, en barriärkarta med bland annat sjöar och branter, och en karta med själva vägnätet som avståndet räknas från. Arbetet handlar alltså om att producera dessa dataset (tabell 1).</p>
+      </div>
+
+      <div class="gis-steps">
+        <div class="gis-step">
+          <h3>Tröghetsraster</h3>
+          <p>Fem vektordataset från Topografi 50: generell marktyp, gångbara stigar och leder samt faktorobjekt som våtmark, extra tät vegetation och blockterräng. Linjer buffras 25 m och alla lager rastreras till 50 m-celler. Cellerna får värden efter hur mycket terrängen bromsar, och lagren summeras till en tröghetsyta.</p>
+        </div>
+        <div class="gis-step">
+          <h3>Barriärkarta</h3>
+          <p>Områden som inte går att ta sig igenom till fots: vattendrag och sjöar från Topografi 50, samt celler med lutning över 30 grader. Lutningen beräknas med verktyget <em>Slope</em> på höjddata för hela Sverige.</p>
+        </div>
+        <div class="gis-step">
+          <h3>Distance Accumulation</h3>
+          <p>Vägnätet används som källa, tröghetsrastret som kostnad och barriärkartan som hinder. Resultatet är den ackumulerade rörelsekostnaden sommartid från närmsta väg, för varje cell i landet.</p>
+        </div>
+      </div>
+
+      <div class="gis-table-wrap">
+        <table class="gis-table">
+          <caption>Tabell 1. Indata</caption>
+          <thead>
+            <tr><th>Data, format</th><th>Används till</th><th>Källa, år</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Topografi 50, Nedladdning, vektor</td>
+              <td>Marktyper, stigar och leder, framkomlighetsfaktorer samt vattendrag</td>
+              <td>Lantmäteriet (2025). Kartan uppdateras frekvent men påbörjades 1992.</td>
+            </tr>
+            <tr>
+              <td>Markhöjdmodell, Nedladdning, grid 50+ (GSD-Höjddata, grid 50+ nh)</td>
+              <td>Lutning (branta områden i barriärkartan)</td>
+              <td>Lantmäteriet (2004). Kartan uppdateras frekvent men påbörjades 1980.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 03 Resultat -->
+    <section class="gis-section" id="resultat">
+      <div class="gis-section-head">
+        <p class="gis-section-num">03</p>
+        <h2>Resultat</h2>
+      </div>
+
+      <div class="gis-stats">
+        <div class="gis-stat">
+          <p class="gis-stat-value">36,5<small>rke</small></p>
+          <p class="gis-stat-label">till den mest avlägsna platsen, vid sjön Vastenjaure i Padjelanta nationalpark</p>
+        </div>
+        <div class="gis-stat">
+          <p class="gis-stat-value">≈ 50<small>%</small></p>
+          <p class="gis-stat-label">av Sverige ligger inom 0,3 rke från närmsta väg</p>
+        </div>
+        <div class="gis-stat">
+          <p class="gis-stat-value">&lt; 14<small>km</small></p>
+          <p class="gis-stat-label">stigvandring (2,6 rke) till närmsta väg från varje punkt utanför Skanderna</p>
+        </div>
+      </div>
+
+      <div class="gis-figures">
+        <figure class="gis-figure">
+          <div class="project-page-gallery-item gis-figure-media"></div>
+          <figcaption><strong>Figur 2.</strong> Kartan visar rörelsekostnaden, eller terrängframkomligheten, sommartid genom varje cell i spannet 1 till 12, där 12 är det största möjliga motståndet och 1 är inget motstånd alls. Motståndsklass 1 används på öppen mark med låg vegetation där man kan gå obehindrat, dessutom på leder, gångvägar och stigar. Högre motståndsklasser representerar högre vegetation, fuktigare mark eller blockigare terräng. Motståndsklass 12 är trögast möjliga mark som fortfarande är framkomlig i alla lutningar, exempelvis glaciärer och blöta myrar.</figcaption>
+        </figure>
+
+        <figure class="gis-figure">
+          <div class="project-page-gallery-item gis-figure-media"></div>
+          <figcaption><strong>Figur 3.</strong> Kartan visar den ackumulerade rörelsekostnaden sommartid från närmsta väg på en linjär skala mellan 36 och 0, där 36 är den mest avlägsna punkten i landet och 0 är varje cell som innehåller en väg.</figcaption>
+        </figure>
+
+        <figure class="gis-figure">
+          <div class="project-page-gallery-item gis-figure-media"></div>
+          <figcaption><strong>Figur 4.</strong> Kartan nedan visar den ackumulerade rörelsekostnaden sommartid till Kungsledens första två etapper. Dessa är två av de mest populära dagsvandringarna i Sverige. Kartan ovan visar framkomligheten för samma område enligt färgskalan.</figcaption>
+        </figure>
+
+        <figure class="gis-figure">
+          <div class="project-page-gallery-item gis-figure-media"></div>
+          <figcaption><strong>Figur 5.</strong> Kartan visar de platser i Sverige där den ackumulerade rörelsekostnaden sommartid från närmsta väg är större än 2,9.</figcaption>
+        </figure>
+
+        <figure class="gis-figure gis-figure--full">
+          <div class="project-page-gallery-item gis-figure-media gis-figure-media--wide"></div>
+          <figcaption><strong>Figur 6.</strong> Histogram som visar fördelning och medelvärde av yta (i antal celler) beroende på ackumulerad distans till närmsta väg. Histogrammet visar att Sverige har flest celler i spannet mellan ackumulerad rörelsekostnad 0,2 och 0,3.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- 04 Diskussion -->
+    <section class="gis-section" id="diskussion">
+      <div class="gis-section-head">
+        <p class="gis-section-num">04</p>
+        <h2>Diskussion</h2>
+      </div>
+      <div class="gis-section-body">
+        <p>Målet med projektet var att undersöka Sveriges framkomlighet för att ta reda på till vilken grad landet är mänskligt utbyggt eller vilt. Resultaten visar att nästan hela Sverige ligger mindre än en dags vandring från närmsta väg. När Sverige delas upp i 150&nbsp;850&nbsp;000 lika stora celler befinner sig enligt figur 6 omkring 75&nbsp;000&nbsp;000 celler, alltså 50&nbsp;%, inom ett område där den ackumulerade rörelsekostnaden till närmsta väg är lägre än 0,3 rörelsekostnadsenheter (rke). Som referens motsvarar 0,3 rke enligt figur 4 mindre än 3 km av sträckan Abisko till Abiskojaure.</p>
+        <p>Figur 3 visar att Gotland och östra Svealand domineras av mörkare grönt, vilket innebär att nästan all mark ligger mellan 0,001 och 0,15 rke från närmsta väg. Även i mellersta och östra Norrland är rörelsekostnaden till närmsta väg förvånansvärt låg och liknar den i södra delarna av Sverige, trots att befolkningsmängden där är mycket lägre. Precis som i södra Sverige täcks stora delar av Norrland alltså av ett mycket tätt vägnät. Detta är en av de saker som förvånade mig mest med resultatet. Jag hade inte väntat mig att norra Sverige skulle ha så tätt med vägar trots att det är så glest med hus. Enligt figur 3 finns det ingen punkt utanför Skanderna med en ackumulerad rörelsekostnad över 2,6 rke från närmsta väg, vilket motsvarar mindre än 14 km stigvandring enligt figur 4.</p>
+        <p>Västra delarna av Norrland utmärker sig genom högre rörelsekostnader. Det beror bland annat på att terrängen ofta är svårare, vilket framgår av figur 2. Rörelsekostnaden ökar längre västerut där bland annat myrar, tätare vegetation och brant terräng blir vanligare. Nationalparker och naturreservat hindrar dessutom vägar från att byggas på många håll i bergen. Sarek och Padjelanta nationalpark samarbetar för att skapa den mest avlägsna platsen i Sverige. Platsen ligger i Padjelanta nationalpark intill sjön Vastenjaure, 36,5 rke från närmsta väg. Det motsvarar ungefär en veckas ostigad vandring för att ta sig dit på sommaren från närmsta väg. Platsen är markerad i figur 3.</p>
+        <p>All data som användes kommer från Lantmäteriets produkter <em>GSD-Höjddata, grid 50+ nh</em> och <em>Topografi 50 Nedladdning, vektor</em> (2025). Höjddata baseras på TIN-teknik med noggrannheten 0,05 meter på öppna ytor och 0,2 meter i mer varierad terräng. Bilderna till Topografi 50 samlas in genom stereokartering eller genom skärmdigitalisering med hjälp av ortofoton. Noggrannheten varierar beroende på hur tydligt objekten skiljer sig från omgivningen på flygbild.</p>
+        <p>Metoden fungerade för att uppfylla rapportens mål, men med låg noggrannhet. Eftersom resultatet från sista uträkningen mäts i ackumulerad rörelsekostnad till närmsta väg på en skala 0–36 är det svårt att tolka, men jämförelsen med Abisko–Abiskojaure ger en rimlig referens. Ett problem med metoden är att tillgängligheten för en plats i hög grad beror på var bilföraren befinner sig. Eftersom bilresor över långa avstånd är tidskrävande och en stor del av befolkningen är bosatt i södra Sverige, blir den verkliga tillgängligheten till platser i Norrland lägre för majoriteten av befolkningen. Ett annat problem är att rastret med rörelsekostnaden bara stämmer överens med verkligheten en relativt kort period varje år. Årstid och väder ändrar framkomligheten, exempelvis genom att sjöar fryser till is och blir gåbara, eller att myrar blir extra våta under regniga perioder så att det blir mycket svårare att ta sig fram.</p>
+        <p>En mer korrekt analys av Sveriges tillgänglighet kan nås genom att låta rörelseackumuleringen börja från en specifik punkt eller stad, exempelvis Stockholm. Rörelsekostnaden kan justeras så att vägnätet får lägre kostnader med variation beroende på hastighetsbegränsning, medan terrängen utanför tilldelas en högre kostnad med variation beroende på terrängtyp. För att ta hänsyn till årstid och väder krävs separata kostnadsraster som möjliggör nya resultat beroende på markförhållanden.</p>
+      </div>
+    </section>
+
+    <!-- 05 Slutsatser -->
+    <section class="gis-section" id="slutsatser">
+      <div class="gis-section-head">
+        <p class="gis-section-num">05</p>
+        <h2>Slutsatser</h2>
+      </div>
+      <div class="gis-section-body">
+        <p>Resultaten visar att det finns områden i nordvästra Sverige utan trafik eller vägar, men att nästan hela resterande delar av Sverige ligger inom gångavstånd från närmsta väg. Vägnätet är tätast nära kusten i Götaland och östra Svealand. Den mest otillgängliga positionen räknat från valfri väg i Sverige på sommaren ligger djupt inne i Padjelanta nationalpark, på en spets av sjön Vastenjaure. För att ta reda på den mest avlägsna platsen vintertid krävs ett nytt kostnadsraster.</p>
+      </div>
+    </section>
+
+    <!-- 06 Referenser -->
+    <section class="gis-section" id="referenser">
+      <div class="gis-section-head">
+        <p class="gis-section-num">06</p>
+        <h2>Referenser</h2>
+      </div>
+      <div class="gis-section-body">
+        <ul class="gis-references">
+          <li>InTeGrate (2016). <em>Worldmap showing estimated population density in number of people per square kilometer in 2015.</em> InTeGrate's Earth-focused Modules and Courses for the Undergraduate Classroom. <a href="https://serc.carleton.edu/167549">serc.carleton.edu/167549</a></li>
+          <li>Lantmäteriet (2025). <em>Topografi 50 Nedladdning, vektor.</em></li>
+          <li>Lantmäteriet. <em>GSD-Höjddata, grid 50+ nh.</em></li>
+          <!-- TODO: komplettera Trafikverket (2025) med titel/länk, och årtal för GSD-Höjddata (2004 i tabell 1, 2020 i diskussionen i originalrapporten). -->
+          <li>Trafikverket (2025).</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Bilaga -->
+    <section class="gis-section" id="bilaga">
+      <div class="gis-section-head">
+        <p class="gis-section-num">Bilaga 1</p>
+        <h2>Flödesschema</h2>
+      </div>
+      <div class="gis-figures">
+        <figure class="gis-figure gis-figure--full">
+          <div class="project-page-gallery-item gis-figure-media gis-figure-media--wide"></div>
+        </figure>
+        <figure class="gis-figure gis-figure--full">
+          <div class="project-page-gallery-item gis-figure-media gis-figure-media--wide"></div>
+        </figure>
+      </div>
+    </section>
 
     <div class="project-page-switch">
       <a href="project-6.html">← Föregående</a>
