@@ -16,7 +16,7 @@ Den här filen är arbetets "sparpunkt". Om arbetet avbryts: läs den här filen
 | PR | Gren | Innehåll | Status |
 |----|------|----------|--------|
 | 1 | `fix/bugs-and-cleanup` | Buggfixar, filnamn, titlar, README | KLAR (lokalt) |
-| 2 | `feat/cv-and-repo-size` (bygger på gren 1) | cv.pdf, `docs/MANUAL-STEPS.md`, .gitignore, untracka source-material | KLAR (lokalt) |
+| 2 | `feat/cv-and-repo-size` | cv.pdf, `docs/MANUAL-STEPS.md`, .gitignore, untracka source-material | EJ PÅBÖRJAD |
 | 3 | `feat/project-pages-redesign` | Ny design projektsidor | EJ PÅBÖRJAD |
 | 4 | `feat/merge-2-7-and-arcgis` | Slå ihop 2+7, ny ArcGIS-sida | EJ PÅBÖRJAD (kräver PDF + text av Simon) |
 | 5 | `feat/landing-polish` | Om mig / Bakgrund / Arbeten | EJ PÅBÖRJAD |
