@@ -1319,43 +1319,78 @@ html.reduce-motion .about-timeline::before {
   color: rgba(var(--fg-rgb), 0.5);
 }
 
-/* ---------- Project page: standalone page each gallery thumbnail links to ---------- */
+/* ---------- Project pages: light, sharp-cornered editorial layout ----------
+   Every project page shares this markup: nav, hero media, story, optional
+   facts strip, gallery, prev/next. No border-radius anywhere in this section —
+   squares and hairlines only. */
 
+:root {
+  --pp-line: rgba(var(--fg-rgb), 0.14);
+  --pp-muted: rgba(var(--fg-rgb), 0.55);
+  --pp-accent: var(--about-terracotta);
+  --pp-w: min(1300px, calc(100% - 4rem));
+  --pp-nav-h: 56px;
+}
+
+/* Fixed top bar: back link left, wordmark right. */
 .project-page-nav {
   position: fixed;
-  top: 1.5rem;
-  left: 1.5rem;
+  inset: 0 0 auto 0;
   z-index: 50;
+  height: var(--pp-nav-h);
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.9);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--pp-line);
+}
+
+.project-page-nav::after {
+  content: 'Simon Strandanger';
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pp-muted);
 }
 
 .project-page-back {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.6rem 1.1rem;
-  border-radius: 999px;
-  background: var(--fg);
-  color: var(--bg);
+  gap: 0.6rem;
+  color: var(--fg);
   text-decoration: none;
-  font-size: 0.8rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.03em;
-  transition: transform 200ms ease;
-}
-
-.project-page-back:hover {
-  transform: scale(1.05);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
 .project-page-back svg {
   width: 16px;
   height: 16px;
+  transition: transform 250ms ease;
 }
 
-.project-page-media {
+.project-page-back:hover svg {
+  transform: translateX(-4px);
+}
+
+.project-page-nav ~ main {
+  padding-top: var(--pp-nav-h);
+}
+
+/* Hero media (image, inline-playing video or YouTube embed) */
+.project-page-media,
+.project-page-media--youtube {
   position: relative;
   width: 100%;
-  height: 100vh;
+  height: calc(100vh - var(--pp-nav-h));
+  height: calc(100svh - var(--pp-nav-h));
+  min-height: 360px;
   overflow: hidden;
   background: var(--media-placeholder);
 }
@@ -1371,37 +1406,6 @@ html.reduce-motion .about-timeline::before {
   display: none;
 }
 
-/* Hero video: a play button over the big top image; clicking plays the video
-   inline in this same box (see .project-page-media-video further down) */
-.project-page-media--video {
-  cursor: pointer;
-}
-
-.project-page-media--video .project-page-play-icon {
-  width: 84px;
-  height: 84px;
-}
-
-.project-page-media--video .project-page-play-icon svg {
-  width: 30px;
-  height: 30px;
-}
-
-/* YouTube embed container */
-.project-page-media--youtube {
-  position: relative;
-  width: 100%;
-  height: 100vh; /* Gör att den tar samma fullhöjd som din vanliga hero-media */
-  overflow: hidden;
-  background: var(--media-placeholder);
-}
-
-.project-page-media--youtube iframe {
-  width: 100%;
-  height: 100%;
-  border: 0;
-}
-
 .project-page-media.missing::after {
   content: attr(data-index);
   position: absolute;
@@ -1414,310 +1418,18 @@ html.reduce-motion .about-timeline::before {
   color: rgba(var(--fg-rgb), 0.15);
 }
 
-.project-page-story {
-  max-width: 700px;
-  margin: 0 auto;
-  padding: 4rem 2rem 4rem;
-}
-
-.project-page-eyebrow {
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-size: 0.8rem;
-  color: rgba(var(--fg-rgb), 0.5);
-  margin-bottom: 0.75rem;
-}
-
-.project-page-title {
-  font-family: 'Bricolage Grotesque', var(--font);
-  font-weight: 800;
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  margin-bottom: 1.5rem;
-}
-
-.project-page-text {
-  font-size: 1.05rem;
-  line-height: 1.6;
-  color: rgba(var(--fg-rgb), 0.75);
-}
-
-.project-page-switch {
-  display: flex;
-  justify-content: space-between;
-  max-width: 700px;
-  margin: 0 auto;
-  padding: 0 2rem 6rem;
-  font-size: 0.85rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.project-page-switch a {
-  color: var(--fg);
-  text-decoration: none;
-  opacity: 0.6;
-  transition: opacity 200ms ease;
-}
-
-.project-page-switch a:hover {
-  opacity: 1;
-}
-
-/* Gallery: extra images below the story. Bigger than before and with a looser,
-   more editorial rhythm — every third tile runs full width instead of every
-   tile being the same size — then each one opens large in the lightbox below
-   on click, same hover-affordance idea as the hero video's play button. */
-.project-page-gallery {
-  max-width: 1300px;
-  margin: 0 auto;
-  padding: 0 2rem 6rem;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem;
-}
-
-.project-page-gallery-caption {
-  grid-column: 1 / -1;
-  margin-top: 1rem;
-  margin-bottom: 2rem;
-  text-align: center;
-}
-
-.project-page-gallery-caption p {
-  margin: 0 auto;
-  max-width: 700px;
-  font-size: 1.05rem;
-  line-height: 1.6;
-  color: rgba(var(--fg-rgb), 0.75);
-  font-family: var(--font);
-}
-
-.project-page-gallery-item:nth-child(3n+1) {
-  grid-column: 1 / -1;
-}
-
-.project-page-gallery-item.project-page-gallery-item--wide {
-  grid-column: 1 / -1;
-  aspect-ratio: 21 / 9;
-}
-
-.project-page-gallery-item.project-page-gallery-item--standard {
-  grid-column: auto;
-  aspect-ratio: 16 / 10;
-}
-
-.project-page-gallery-item.project-page-gallery-item--standard:nth-child(3n+1) {
-  grid-column: auto;
-  aspect-ratio: 16 / 10;
-}
-
-.project-page-gallery-item {
-  position: relative;
-  aspect-ratio: 16 / 10;
-  overflow: hidden;
-  border-radius: 14px;
-  background: var(--media-placeholder);
-  cursor: pointer;
-}
-
-.project-page-gallery-item:nth-child(3n+1) {
-  aspect-ratio: 21 / 9;
-}
-
-.project-page-gallery-item img,
-.project-page-gallery-item video {
+.project-page-media--youtube iframe {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  display: block;
-  transition: transform 700ms cubic-bezier(0.25, 1, 0.5, 1);
+  border: 0;
 }
 
-.project-page-gallery-item:hover img,
-.project-page-gallery-item:hover video {
-  transform: scale(1.06);
-}
-
-.project-page-gallery-item--video video {
-  background: var(--media-placeholder);
-}
-
-.project-page-slider {
-  max-width: 1300px;
-  margin: 0 auto 3rem;
-  padding: 0 2rem;
-}
-
-.project-page-slider-track {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(180px, 1fr);
-  gap: 1rem;
-  overflow-x: auto;
-  padding-bottom: 0.75rem;
-  scroll-snap-type: x proximity;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(var(--fg-rgb), 0.2) transparent;
-}
-
-.project-page-slider-track::-webkit-scrollbar {
-  height: 8px;
-}
-
-.project-page-slider-track::-webkit-scrollbar-thumb {
-  background: rgba(var(--fg-rgb), 0.2);
-  border-radius: 999px;
-}
-
-.project-page-slider-track img {
-  width: 100%;
-  height: 220px;
-  object-fit: cover;
-  display: block;
-  border-radius: 14px;
-  scroll-snap-align: start;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-}
-
-.project-page-gallery-item::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0);
-  transition: background 300ms ease;
-}
-
-.project-page-gallery-item:hover::after {
-  background: rgba(0, 0, 0, 0.15);
-}
-
-.project-page-gallery-expand {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.94);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transform: translate(-50%, -50%) scale(0.8);
-  transition: opacity 250ms ease, transform 250ms ease;
-  pointer-events: none;
-}
-
-.project-page-gallery-item:hover .project-page-gallery-expand {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-}
-
-.project-page-gallery-expand svg {
-  width: 18px;
-  height: 18px;
-  color: #111;
-}
-
-/* ---------- Project page: lightbox — opens whichever gallery tile was clicked
-   at full size, with prev/next through the rest of the set. Injected once by
-   project.js if a gallery is present, so it's the same markup on every page. ---------- */
-.project-lightbox {
-  position: fixed;
-  inset: 0;
-  z-index: 900;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(10, 10, 10, 0.94);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 300ms ease;
-}
-
-.project-lightbox.is-open {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.project-lightbox-img {
-  max-width: min(88vw, 1400px);
-  max-height: 86vh;
-  object-fit: contain;
-  border-radius: 8px;
-  transform: scale(0.94);
-  transition: transform 350ms cubic-bezier(0.16, 0.84, 0.44, 1);
-}
-
-.project-lightbox.is-open .project-lightbox-img {
-  transform: scale(1);
-}
-
-.project-lightbox-close,
-.project-lightbox-prev,
-.project-lightbox-next {
-  position: fixed;
-  z-index: 901;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.project-page-media--video {
   cursor: pointer;
-  transition: background 200ms ease, transform 200ms ease;
 }
 
-.project-lightbox-close:hover,
-.project-lightbox-prev:hover,
-.project-lightbox-next:hover {
-  background: rgba(255, 255, 255, 0.22);
-  transform: scale(1.06);
-}
-
-.project-lightbox-close svg,
-.project-lightbox-prev svg,
-.project-lightbox-next svg {
-  width: 20px;
-  height: 20px;
-}
-
-.project-lightbox-close {
-  top: 1.5rem;
-  right: 1.5rem;
-}
-
-.project-lightbox-prev,
-.project-lightbox-next {
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.project-lightbox-prev:hover,
-.project-lightbox-next:hover {
-  transform: translateY(-50%) scale(1.06);
-}
-
-.project-lightbox-prev { left: 1.5rem; }
-.project-lightbox-next { right: 1.5rem; }
-
-body.lightbox-open {
-  overflow: hidden;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .project-lightbox,
-  .project-lightbox-img {
-    transition-duration: 1ms;
-  }
-}
-
-/* Hero video: a play button sits over the top image; clicking swaps in a
-   real <video> in the same box instead of navigating anywhere */
+/* Hero video: a play button over the still image; clicking swaps in a real
+   <video> in the same box (project.js). Pausing crossfades back to the still. */
 .project-page-play-button {
   position: absolute;
   inset: 0;
@@ -1735,37 +1447,33 @@ body.lightbox-open {
 }
 
 .project-page-media--video:hover .project-page-play-button::before {
-  background: rgba(0, 0, 0, 0.18);
+  background: rgba(0, 0, 0, 0.12);
 }
 
 .project-page-play-icon {
   position: relative;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.94);
+  width: 76px;
+  height: 76px;
+  background: #fff;
+  color: var(--fg);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 250ms ease;
+  transition: transform 250ms ease, background 250ms ease, color 250ms ease;
 }
 
 .project-page-media--video:hover .project-page-play-icon {
-  transform: scale(1.1);
+  background: var(--fg);
+  color: #fff;
+  transform: scale(1.06);
 }
 
 .project-page-play-icon svg {
-  width: 20px;
-  height: 20px;
-  color: #111;
+  width: 26px;
+  height: 26px;
   margin-left: 3px; /* optical centering for the play triangle */
 }
 
-/* Once clicked, the video covers the still image and the play button fades out
-   — same box, same size, just playing instead of static. Pausing crossfades
-   back to the thumbnail (and the play button) rather than leaving a paused
-   video frame showing; pressing play again resumes from the same spot since
-   the video element itself is never removed or reset, just hidden. */
 .project-page-media-video {
   position: absolute;
   inset: 0;
@@ -1774,9 +1482,8 @@ body.lightbox-open {
   object-fit: cover;
   opacity: 0;
   /* not interactive while paused/hidden — otherwise a click meant to resume
-     playback lands on the <video> itself, and the browser's own native
-     click-to-toggle fires alongside our explicit resume call, immediately
-     pausing it again right after it starts */
+     playback lands on the <video> itself and the browser's native
+     click-to-toggle pauses it again right after it starts */
   pointer-events: none;
   transition: opacity 200ms ease;
 }
@@ -1804,25 +1511,432 @@ body.lightbox-open {
   transition: opacity 200ms ease;
 }
 
+/* Story: eyebrow on top, big title left, text right. */
+.project-page-story {
+  width: var(--pp-w);
+  margin: 0 auto;
+  padding: 5rem 0 3.5rem;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: 1.5rem;
+  row-gap: 1.5rem;
+  align-items: end;
+}
+
+.project-page-eyebrow {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pp-muted);
+}
+
+.project-page-eyebrow::before {
+  content: '';
+  width: 36px;
+  height: 2px;
+  background: var(--pp-accent);
+}
+
+.project-page-title {
+  grid-column: 1 / 8;
+  font-family: 'Bricolage Grotesque', var(--font);
+  font-weight: 800;
+  font-size: clamp(2.4rem, 6.4vw, 5.4rem);
+  line-height: 0.96;
+  letter-spacing: -0.03em;
+}
+
+.project-page-text {
+  grid-column: 8 / -1;
+  font-size: 1.1rem;
+  line-height: 1.65;
+  color: rgba(var(--fg-rgb), 0.78);
+}
+
+/* Facts strip: hairline-separated cells. Cells come from the page's own
+   <dl class="project-page-facts"> plus counts that project.js appends. */
+.project-page-facts {
+  width: var(--pp-w);
+  margin: 0 auto 4rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  border-top: 1px solid var(--pp-line);
+  border-bottom: 1px solid var(--pp-line);
+}
+
+.project-page-facts > div {
+  padding: 1.4rem 1.5rem;
+  border-left: 1px solid var(--pp-line);
+}
+
+.project-page-facts > div:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+
+.project-page-facts dt {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pp-muted);
+  margin-bottom: 0.5rem;
+}
+
+.project-page-facts dd {
+  margin: 0;
+  font-family: 'Bricolage Grotesque', var(--font);
+  font-weight: 800;
+  font-size: clamp(1.4rem, 2.6vw, 2.1rem);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+/* Gallery: tight grid, every third tile runs full width (or set --wide /
+   --standard explicitly). Click opens the lightbox. */
+.project-page-gallery {
+  width: var(--pp-w);
+  margin: 0 auto;
+  padding: 0 0 5rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.project-page-gallery-caption {
+  grid-column: 1 / -1;
+  margin: 1rem 0 2rem;
+}
+
+.project-page-gallery-caption p {
+  max-width: 700px;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: rgba(var(--fg-rgb), 0.75);
+}
+
+.project-page-gallery-item {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: var(--media-placeholder);
+  cursor: pointer;
+}
+
+.project-page-gallery-item:nth-child(3n+1) {
+  grid-column: 1 / -1;
+  aspect-ratio: 21 / 9;
+}
+
+.project-page-gallery-item.project-page-gallery-item--wide {
+  grid-column: 1 / -1;
+  aspect-ratio: 21 / 9;
+}
+
+.project-page-gallery-item.project-page-gallery-item--standard,
+.project-page-gallery-item.project-page-gallery-item--standard:nth-child(3n+1) {
+  grid-column: auto;
+  aspect-ratio: 16 / 10;
+}
+
+.project-page-gallery-item img,
+.project-page-gallery-item video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 700ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.project-page-gallery-item:hover img,
+.project-page-gallery-item:hover video {
+  transform: scale(1.03);
+}
+
+.project-page-gallery-item--video video {
+  background: var(--media-placeholder);
+}
+
+.project-page-gallery-item::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0);
+  transition: background 300ms ease;
+  pointer-events: none;
+}
+
+.project-page-gallery-item:hover::after {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.project-page-gallery-expand {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  width: 44px;
+  height: 44px;
+  background: #fff;
+  color: var(--fg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 250ms ease, transform 250ms ease;
+  pointer-events: none;
+}
+
+.project-page-gallery-item:hover .project-page-gallery-expand,
+.project-page-gallery-item:focus-visible .project-page-gallery-expand {
+  opacity: 1;
+  transform: none;
+}
+
+.project-page-gallery-item:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 2px;
+}
+
+.project-page-gallery-expand svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Scroll reveal — only active once project.js adds .js-reveal, so the
+   gallery is fully visible without JS. */
+.js-reveal .project-page-gallery-item {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 600ms ease, transform 600ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.js-reveal .project-page-gallery-item.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+.project-page-slider {
+  width: var(--pp-w);
+  margin: 0 auto 3rem;
+}
+
+.project-page-slider-track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(180px, 1fr);
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 0.75rem;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(var(--fg-rgb), 0.2) transparent;
+}
+
+.project-page-slider-track::-webkit-scrollbar {
+  height: 8px;
+}
+
+.project-page-slider-track::-webkit-scrollbar-thumb {
+  background: rgba(var(--fg-rgb), 0.2);
+}
+
+.project-page-slider-track img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+  scroll-snap-align: start;
+}
+
+/* Prev / next: two full-width blocks that invert on hover. */
+.project-page-switch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid var(--pp-line);
+}
+
+.project-page-switch a {
+  padding: 3rem 2rem;
+  color: var(--fg);
+  text-decoration: none;
+  font-family: 'Bricolage Grotesque', var(--font);
+  font-weight: 800;
+  font-size: clamp(1.1rem, 2.6vw, 2rem);
+  letter-spacing: -0.02em;
+  transition: background 250ms ease, color 250ms ease;
+}
+
+.project-page-switch a + a {
+  text-align: right;
+  border-left: 1px solid var(--pp-line);
+  padding-right: 6.5rem; /* clears the fixed contact button */
+}
+
+.project-page-switch a:hover {
+  background: var(--fg);
+  color: #fff;
+}
+
+/* Contact button: square on project pages too. */
+body:has(.project-page-nav) .hero-contact {
+  border-radius: 0;
+}
+
+/* Lightbox: opens a gallery tile at full size, prev/next through the set.
+   Injected once by project.js. */
+.project-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 300ms ease;
+}
+
+.project-lightbox.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.project-lightbox-img {
+  max-width: min(88vw, 1400px);
+  max-height: 86vh;
+  object-fit: contain;
+  transform: scale(0.97);
+  transition: transform 350ms cubic-bezier(0.16, 0.84, 0.44, 1);
+}
+
+.project-lightbox.is-open .project-lightbox-img {
+  transform: scale(1);
+}
+
+.project-lightbox-close,
+.project-lightbox-prev,
+.project-lightbox-next {
+  position: fixed;
+  z-index: 901;
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--fg);
+  background: transparent;
+  color: var(--fg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 200ms ease, color 200ms ease;
+}
+
+.project-lightbox-close:hover,
+.project-lightbox-prev:hover,
+.project-lightbox-next:hover {
+  background: var(--fg);
+  color: #fff;
+}
+
+.project-lightbox-close svg,
+.project-lightbox-prev svg,
+.project-lightbox-next svg {
+  width: 20px;
+  height: 20px;
+}
+
+.project-lightbox-close {
+  top: 1.5rem;
+  right: 1.5rem;
+}
+
+.project-lightbox-prev,
+.project-lightbox-next {
+  top: 50%;
+  margin-top: -24px;
+}
+
+.project-lightbox-prev { left: 1.5rem; }
+.project-lightbox-next { right: 1.5rem; }
+
+body.lightbox-open {
+  overflow: hidden;
+}
+
 @media (max-width: 780px) {
-  .project-page-gallery {
-    grid-template-columns: 1fr;
+  :root {
+    --pp-w: calc(100% - 2.5rem);
   }
 
-  .project-page-gallery-item:nth-child(3n+1) {
+  .project-page-nav {
+    padding: 0 1.25rem;
+  }
+
+  .project-page-story {
+    padding: 3rem 0 2.5rem;
+  }
+
+  .project-page-title,
+  .project-page-text {
+    grid-column: 1 / -1;
+  }
+
+  .project-page-facts {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .project-page-facts > div,
+  .project-page-facts > div:first-child {
+    padding: 1.1rem 1rem 1.1rem 0;
+    border-left: 0;
+  }
+
+  .project-page-facts > div:nth-child(n+3) {
+    border-top: 1px solid var(--pp-line);
+  }
+
+  .project-page-gallery {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .project-page-gallery-item:nth-child(3n+1),
+  .project-page-gallery-item.project-page-gallery-item--wide {
     aspect-ratio: 16 / 10;
+  }
+
+  .project-page-switch a {
+    padding: 2rem 1.25rem;
   }
 
   .project-lightbox-prev,
   .project-lightbox-next {
     width: 40px;
     height: 40px;
+    margin-top: -20px;
   }
 
   .project-lightbox-prev { left: 0.75rem; }
   .project-lightbox-next { right: 0.75rem; }
   .project-lightbox-close { top: 1rem; right: 1rem; }
+}
 
+@media (prefers-reduced-motion: reduce) {
+  .project-lightbox,
+  .project-lightbox-img,
+  .js-reveal .project-page-gallery-item {
+    transition-duration: 1ms;
+  }
+}
+
+@media (max-width: 780px) {
   .about {
     padding: 4rem 1.5rem;
   }
