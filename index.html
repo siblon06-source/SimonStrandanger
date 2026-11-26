@@ -129,59 +129,100 @@
             </div>
           </div>
 
-          <!-- Timeline: text on one side, image on the other — same two-column idea as
-               the split section above, with a small clean timeline instead of prose. -->
-          <div class="about-timeline-section">
-            <div class="about-timeline-col">
-              <h3 class="about-timeline-heading about-reveal-item"><span class="about-timeline-heading-num">02</span>Arbeten</h3>
-              <div class="about-timeline">
+          <!-- Arbeten: three timelines (experience, selected projects with image slots,
+               education). Rows reuse .about-timeline-item so script.js reveals them. -->
+          <div class="about-work">
+            <h3 class="about-timeline-heading about-reveal-item"><span class="about-timeline-heading-num">02</span>Arbeten</h3>
+              <div class="about-work-group">
+                <h4 class="about-work-sub about-reveal-item">Arbetslivserfarenhet</h4>
+                <div class="about-timeline">
                 <div class="about-timeline-item">
-                  <p class="about-timeline-period">2024</p>
-                  <h4 class="about-timeline-role">Digital tvilling av Gymnastikhall</h4>
-                  <p class="about-timeline-org">Järfällagymnasterna</p>
-                  <p class="about-timeline-text">Fotorealistisk 3D-visualisering av JG-hallen, där hela interiören modellerades, texturerades, ljussattes och animerades i Blender. Modellen spelas idag på skärmar i hallen.</p>
+                  <p class="about-timeline-period">2025 – 2026</p>
+                  <h4 class="about-timeline-role">Tränare</h4>
+                  <p class="about-timeline-org">Järfällagymnasterna, Järfälla</p>
+                  <p class="about-timeline-text">Grupptränare för seniorer 65+ och i skolor runtom i Järfälla, samt ledare i truppgymnastik för barn och ungdomar (8–16 år) i tränings- och tävlingsgrupper och på läger, 6–8 timmar per vecka.</p>
                 </div>
                 <div class="about-timeline-item">
+                  <p class="about-timeline-period">Apr – Aug 2026</p>
+                  <h4 class="about-timeline-role">Fönsterputsare</h4>
+                  <p class="about-timeline-org">Hemfrid, Stockholm</p>
+                  <p class="about-timeline-text">Fönsterputs hos privatpersoner i och kring Stockholm.</p>
+                </div>
+                <div class="about-timeline-item">
+                  <p class="about-timeline-period">Okt 2024 – Maj 2025</p>
+                  <h4 class="about-timeline-role">Grupptränare</h4>
+                  <p class="about-timeline-org">Idrottsklivet, Järfälla kommun</p>
+                  <p class="about-timeline-text">Ledare i kommunens projekt Idrottsklivet på skolor i utsatta områden. Dessutom tävlingsledare och tekniktränare för Järfällagymnasternas pojkar 12–15 år inför ungdoms-SM.</p>
+                </div>
+                <div class="about-timeline-item">
+                  <p class="about-timeline-period">Dec 2025 – 2026</p>
+                  <h4 class="about-timeline-role">Fotograf och bildförsäljning</h4>
+                  <p class="about-timeline-org">BCK Media</p>
+                  <p class="about-timeline-text">Foto och försäljning av bilder från bland annat Riksfyran och Rikstrean i Järfälla, Fridegårdsgymnasiets studentfirande och Sinclairs på Stockholm Statsteater.</p>
+                </div>
+                </div>
+              </div>
+              <div class="about-work-group">
+                <h4 class="about-work-sub about-reveal-item">Utvalda projekt</h4>
+                <div class="about-timeline">
+                <div class="about-timeline-item about-timeline-item--project">
+                  <p class="about-timeline-period">2026</p>
+                  <h4 class="about-timeline-role">Visualisering av ny lokal för Renta</h4>
+                  <p class="about-timeline-org">Renta Maskinuthyrning, Järfälla</p>
+                  <p class="about-timeline-text">Stor skalenlig 3D-visualisering av en industrilokal inför inflytt: modell, ljus, textur och rendering.</p>
+                  <div class="about-media about-media--project"><img src="images/about/projects/renta.jpg" alt="" onerror="this.parentElement.classList.add('missing')"></div>
+                </div>
+                <div class="about-timeline-item about-timeline-item--project">
                   <p class="about-timeline-period">2025</p>
                   <h4 class="about-timeline-role">Visualisering av klocka</h4>
                   <p class="about-timeline-org">Ozia Watches</p>
-                  <p class="about-timeline-text">3D-Visualisering av klockor för det nystartade företaget Ozia Watches. Materialet användes i marknadsföring och produktpresentation.</p>
+                  <p class="about-timeline-text">3D-visualisering av klockor för marknadsföring och produktpresentation.</p>
+                  <div class="about-media about-media--project"><img src="images/about/projects/ozia.jpg" alt="" onerror="this.parentElement.classList.add('missing')"></div>
                 </div>
-                <div class="about-timeline-item">
+                <div class="about-timeline-item about-timeline-item--project">
                   <p class="about-timeline-period">2025</p>
-                  <h4 class="about-timeline-role">Foto Rikstrean</h4>
-                  <p class="about-timeline-org">BCK Media</p>
-                  <p class="about-timeline-text">Fotoförsäljning på gymnastiktävlingen Riksfyran i Järfälla. Bilder såldes i paket till klubbarna</p>
+                  <h4 class="about-timeline-role">Digital tvilling av gymnastikhall</h4>
+                  <p class="about-timeline-org">Järfällagymnasterna</p>
+                  <p class="about-timeline-text">Fotorealistisk modell av JG-hallen i Blender. Filmklippen spelas idag på skärmar i hallen.</p>
+                  <div class="about-media about-media--project"><img src="images/about/projects/gymnastikhall.jpg" alt="" onerror="this.parentElement.classList.add('missing')"></div>
                 </div>
-                <div class="about-timeline-item">
-                  <p class="about-timeline-period">2026</p>
-                  <h4 class="about-timeline-role">Lokalplanering med digital tvilling i Järfälla</h4>
-                  <p class="about-timeline-org">Renta Maskinuthyrning Järfälla</p>
-                  <p class="about-timeline-text">Stor skalenlig visualisering av en industrilokal i första skedet av inredning inför inflytt.</p>
-                </div>
-                <div class="about-timeline-item">
-                  <p class="about-timeline-period">2026</p>
-                  <h4 class="about-timeline-role">Foto Studentfirande Fridegårdsgymnasiet</h4>
-                  <p class="about-timeline-org">BCK Media</p>
-                  <p class="about-timeline-text">Foto och bildförsäljning för BCK Media på Fridegårdsgymnasiets studentfirande.</p>
-                </div>
-                <div class="about-timeline-item">
-                  <p class="about-timeline-period">2026</p>
-                  <h4 class="about-timeline-role">Foto Sinclairs Stockholm</h4>
-                  <p class="about-timeline-org">BCK Media</p>
-                  <p class="about-timeline-text">Fotoförsäljning för BCK Media på dansuppvisningen Sinclairs på Stockholm Statsteater.</p>
-                </div>
-                <div class="about-timeline-item">
+                <div class="about-timeline-item about-timeline-item--project">
                   <p class="about-timeline-period">2026</p>
                   <h4 class="about-timeline-role">Verktyg för nerfbaserad fotogrammetri</h4>
-                  <p class="about-timeline-org">Ingen kund än så länge</p>
-                  <p class="about-timeline-text">Utveckling av ett verktyg för automatisk 3D-scanning för digitalisering av miljöer inne och ute. Jag planerar att använda verktyget för att underlätta planering vid byggprojekt i Järfälla.</p>
+                  <p class="about-timeline-org">Eget projekt</p>
+                  <p class="about-timeline-text">Ett verktyg för automatisk 3D-scanning av miljöer inne och ute, tänkt att underlätta planering vid byggprojekt i Järfälla.</p>
+                  <div class="about-media about-media--project"><img src="images/about/projects/fotogrammetri.jpg" alt="" onerror="this.parentElement.classList.add('missing')"></div>
+                </div>
                 </div>
               </div>
-            </div>
-            <div class="about-media about-media--timeline about-reveal-item">
-              <img src="images/about/timeline.jpg" alt="" onerror="this.parentElement.classList.add('missing')">
-            </div>
+              <div class="about-work-group">
+                <h4 class="about-work-sub about-reveal-item">Utbildning</h4>
+                <div class="about-timeline">
+                <div class="about-timeline-item">
+                  <p class="about-timeline-period">2026 – pågående</p>
+                  <h4 class="about-timeline-role">Civilingenjör, Samhällsbyggnadsteknik</h4>
+                  <p class="about-timeline-org">Chalmers tekniska högskola, Göteborg</p>
+                </div>
+                <div class="about-timeline-item">
+                  <p class="about-timeline-period">Aug 2025 – Jan 2026</p>
+                  <h4 class="about-timeline-role">GIS I</h4>
+                  <p class="about-timeline-org">Södertörns universitet</p>
+                  <p class="about-timeline-text">Geografisk analys i ArcGIS och QGIS.</p>
+                </div>
+                <div class="about-timeline-item">
+                  <p class="about-timeline-period">2022 – 2025</p>
+                  <h4 class="about-timeline-role">Naturvetenskapligt program</h4>
+                  <p class="about-timeline-org">Viktor Rydbergs Gymnasium, Sundbyberg</p>
+                  <p class="about-timeline-text">Inklusive matematik 5 och engelska 7. Moderna språk: tyska.</p>
+                </div>
+                <div class="about-timeline-item">
+                  <p class="about-timeline-period">Kurser</p>
+                  <h4 class="about-timeline-role">Gymnastikledarutbildningar</h4>
+                  <p class="about-timeline-org">SISU Förlag i samverkan med Gymnastikförbundet</p>
+                  <p class="about-timeline-text">Bland annat Truppgymnastik A och redskap B, Gymnastikens ledarskap, Åldersanpassad träning för barn och unga samt HLR med hjärtstartare.</p>
+                </div>
+                </div>
+              </div>
           </div>
 
           <div class="about-cta about-reveal-item">
