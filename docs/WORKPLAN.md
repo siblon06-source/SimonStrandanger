@@ -43,7 +43,7 @@ Den här filen är arbetets "sparpunkt". Om arbetet avbryts: läs den här filen
 |----|------|----------|--------|
 | A (#10) | `work/ui-fixes` | CV-länk, Photograph-rubrik, Se alla bilder, projekt 1 bild 10.jpg | öppen |
 | B | `work/gis-images` | Figur 1–6 + liggande thumbnail i projekt 7, Bilaga 1 borttagen | klar |
-| C | `work/blender-merge` | Projekt 9 → projekt 6 (polygonmodellering i Blender), 27.png bort | planerad |
+| C | `work/blender-merge` | Projekt 9 → projekt 6 (polygonmodellering i Blender), 27.png bort | klar |
 | D | `work/webdev-project` | Projekt 4 ersätts av webbutvecklingsprojekt | planerad |
 | E | `work/arbeten-rebuild` | Arbeten: erfarenhet, projekt (timeline), utbildning | planerad |
 
