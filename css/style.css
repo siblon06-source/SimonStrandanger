@@ -1888,6 +1888,10 @@ html.reduce-motion .about-timeline::before {
   margin: -1.5rem auto 3.5rem;
 }
 
+.gis-actions.gis-actions--inline {
+  margin: 0 auto 1.75rem;
+}
+
 .gis-download {
   display: inline-flex;
   align-items: center;
