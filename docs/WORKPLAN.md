@@ -45,6 +45,6 @@ Den här filen är arbetets "sparpunkt". Om arbetet avbryts: läs den här filen
 | B | `work/gis-images` | Figur 1–6 + liggande thumbnail i projekt 7, Bilaga 1 borttagen | klar |
 | C | `work/blender-merge` | Projekt 9 → projekt 6 (polygonmodellering i Blender), 27.png bort | klar |
 | D | `work/webdev-project` | Projekt 4 ersätts av webbutvecklingsprojekt | klar (bildplatser tomma, lägg egen statistik i faktaraden) |
-| E | `work/arbeten-rebuild` | Arbeten: erfarenhet, projekt (timeline), utbildning | planerad |
+| E | `work/arbeten-rebuild` | Arbeten: erfarenhet, projekt (timeline), utbildning | klar (bilder: images/about/projects/renta.jpg, ozia.jpg, gymnastikhall.jpg, fotogrammetri.jpg) |
 
 Kedja: A → B → C → D → E. Merga i ordning med "Delete branch".

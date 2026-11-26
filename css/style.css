@@ -950,14 +950,6 @@ body.curtain-covers-header .site-nav {
   font-weight: 700;
 }
 
-.about-timeline-section {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 3rem;
-  align-items: start;
-  margin-bottom: 4rem;
-}
-
 .about-timeline-heading {
   display: flex;
   flex-direction: column;
@@ -977,11 +969,24 @@ body.curtain-covers-header .site-nav {
   letter-spacing: 0.14em;
 }
 
-.about-media--timeline {
-  position: sticky;
-  top: 2rem;
-  width: 100%;
-  aspect-ratio: 3 / 4;
+.about-work {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+  margin-bottom: 4rem;
+}
+
+.about-work .about-timeline-heading {
+  margin-bottom: 0;
+}
+
+.about-work-sub {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(var(--fg-rgb), 0.55);
+  margin-bottom: 1.1rem;
 }
 
 /* Timeline: ruled rows — year on the left, role / org / description on the right.
@@ -996,8 +1001,8 @@ body.curtain-covers-header .site-nav {
 .about-timeline-item {
   position: relative;
   display: grid;
-  grid-template-columns: 5rem 1fr;
-  column-gap: 1.5rem;
+  grid-template-columns: 8.5rem 1fr;
+  column-gap: 2.5rem;
   padding: 1.75rem 0;
   border-bottom: 1px solid rgba(var(--fg-rgb), 0.14);
   opacity: 0;
@@ -1022,15 +1027,62 @@ body.curtain-covers-header .site-nav {
   border-bottom-color: var(--fg);
 }
 
+/* Rail: a hairline between the period and the content, with a dot per row. */
+.about-timeline-item::before {
+  content: '';
+  position: absolute;
+  left: calc(8.5rem + 1.25rem);
+  top: 0;
+  bottom: -1px;
+  width: 1px;
+  background: rgba(var(--fg-rgb), 0.18);
+}
+
+.about-timeline-item::after {
+  content: '';
+  position: absolute;
+  left: calc(8.5rem + 1.25rem - 4px);
+  top: 2.15rem;
+  width: 9px;
+  height: 9px;
+  background: var(--bg, #e8e8e8);
+  border: 1.5px solid var(--fg);
+  transition: background 250ms ease, border-color 250ms ease;
+}
+
+.about-timeline-item:hover::after {
+  background: var(--about-terracotta);
+  border-color: var(--about-terracotta);
+}
+
+/* Project rows get an image slot on the right (empty until a file is dropped in). */
+.about-timeline-item--project {
+  grid-template-columns: 8.5rem 1fr minmax(0, 220px);
+}
+
+.about-timeline-item--project .about-media--project {
+  grid-column: 3;
+  grid-row: 1 / span 4;
+  align-self: start;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+}
+
+.about-timeline-item--project .about-timeline-role,
+.about-timeline-item--project .about-timeline-org,
+.about-timeline-item--project .about-timeline-text {
+  grid-column: 2;
+}
+
 .about-timeline-period {
   grid-column: 1;
   grid-row: 1 / span 3;
   font-family: 'Bricolage Grotesque', var(--font);
   font-weight: 800;
-  font-size: 1.5rem;
+  font-size: 1.1rem;
   letter-spacing: -0.02em;
-  line-height: 1.1;
-  color: rgba(var(--fg-rgb), 0.35);
+  line-height: 1.2;
+  color: rgba(var(--fg-rgb), 0.45);
   transition: color 250ms ease;
 }
 
@@ -2395,19 +2447,41 @@ body.lightbox-open {
     margin: 2rem 0 3rem;
   }
 
-  .about-split,
-  .about-timeline-section {
+  .about-split {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
 
-  .about-split-media,
-  .about-media--timeline {
+  .about-split-media {
     position: static;
   }
 
-  .about-media--timeline {
-    order: -1;
+  .about-timeline-item,
+  .about-timeline-item--project {
+    grid-template-columns: 1fr;
+  }
+
+  .about-timeline-item::before,
+  .about-timeline-item::after {
+    display: none;
+  }
+
+  .about-timeline-period {
+    grid-row: auto;
+    margin-bottom: 0.5rem;
+  }
+
+  .about-timeline-item .about-timeline-role,
+  .about-timeline-item .about-timeline-org,
+  .about-timeline-item .about-timeline-text,
+  .about-timeline-item--project .about-media--project {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .about-timeline-item--project .about-media--project {
+    margin-top: 1rem;
+    max-width: 320px;
   }
 
   .photo-showcase {
