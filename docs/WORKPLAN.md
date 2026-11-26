@@ -36,3 +36,15 @@ Den här filen är arbetets "sparpunkt". Om arbetet avbryts: läs den här filen
 - PDF: lägg rapporten som `files/sveriges-tillganglighet-till-fots.pdf`.
 - Miniatyrer för projekt 7: `images/carousel/7.jpg` (startsidan) och `images/projects/project-7/hero.jpg` (projects.html). Tills de finns visas en tom ruta.
 - Refererenser att komplettera: Trafikverket (2025) och årtal för GSD-Höjddata (2004 i tabellen, 2020 i diskussionen i originalrapporten).
+
+## Omgång 2 (UI-fixar och projektstädning)
+
+| PR | Gren | Innehåll | Status |
+|----|------|----------|--------|
+| A (#10) | `work/ui-fixes` | CV-länk, Photograph-rubrik, Se alla bilder, projekt 1 bild 10.jpg | öppen |
+| B | `work/gis-images` | Figur 1–6 + liggande thumbnail i projekt 7, Bilaga 1 borttagen | klar |
+| C | `work/blender-merge` | Projekt 9 → projekt 6 (polygonmodellering i Blender), 27.png bort | planerad |
+| D | `work/webdev-project` | Projekt 4 ersätts av webbutvecklingsprojekt | planerad |
+| E | `work/arbeten-rebuild` | Arbeten: erfarenhet, projekt (timeline), utbildning | planerad |
+
+Kedja: A → B → C → D → E. Merga i ordning med "Delete branch".
